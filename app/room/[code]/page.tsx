@@ -382,7 +382,7 @@ export default function RoomPage() {
         })
         .eq('code', roomCode);
 
-      // Wait 2 seconds then advance to next word
+      // Wait 1 second then advance to next word
       setTimeout(async () => {
         if (wordIndex >= TOTAL_WORDS - 1) {
           await supabase
@@ -401,7 +401,7 @@ export default function RoomPage() {
             })
             .eq('code', roomCode);
         }
-      }, 2000);
+      }, 1000);
     }
 
     setUserInput('');
