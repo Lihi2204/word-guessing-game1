@@ -54,6 +54,8 @@ export default function RoomPage() {
   wordAnsweredRef.current = wordAnswered;
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
+  const roomRef = useRef(room);
+  roomRef.current = room;
 
   // Check if current player is the host
   const isHost = room?.player1_id === playerId;
@@ -147,9 +149,10 @@ export default function RoomPage() {
         },
         (payload) => {
           const attempt = payload.new as any;
-          const playerName = attempt.player_id === room?.player1_id
-            ? room?.player1_name
-            : room?.player2_name;
+          const currentRoom = roomRef.current;
+          const playerName = attempt.player_id === currentRoom?.player1_id
+            ? currentRoom?.player1_name
+            : currentRoom?.player2_name;
 
           setAttempts(prev => [...prev, {
             player_id: attempt.player_id,
@@ -162,7 +165,15 @@ export default function RoomPage() {
             setWordAnswered(true);
             // Show popup if opponent answered correctly (not me)
             if (attempt.player_id !== playerId) {
+              // Show popup with opponent's name
               setOpponentCorrectPopup(playerName || 'היריב');
+            } else {
+              // I answered correctly - show confetti (in case realtime fires)
+              confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+              });
             }
           }
         }
