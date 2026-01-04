@@ -1,22 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { createClient } from '@supabase/supabase-js';
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
-const WORDS_FILE = path.join(process.cwd(), 'data', 'words.json');
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 function checkAuth(request: NextRequest): boolean {
   const password = request.headers.get('x-admin-password');
   return password === ADMIN_PASSWORD;
-}
-
-function readWordsFile() {
-  const data = fs.readFileSync(WORDS_FILE, 'utf-8');
-  return JSON.parse(data);
-}
-
-function writeWordsFile(data: any) {
-  fs.writeFileSync(WORDS_FILE, JSON.stringify(data, null, 2), 'utf-8');
 }
 
 // GET - Get all categories
@@ -26,9 +20,16 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const data = readWordsFile();
-    return NextResponse.json({ categories: data.categories });
-  } catch {
+    const { data: categories, error } = await supabase
+      .from('categories')
+      .select('*')
+      .order('name');
+
+    if (error) throw error;
+
+    return NextResponse.json({ categories: categories || [] });
+  } catch (error) {
+    console.error('Error fetching categories:', error);
     return NextResponse.json({ error: 'Failed to read categories' }, { status: 500 });
   }
 }
@@ -41,19 +42,21 @@ export async function POST(request: NextRequest) {
 
   try {
     const { id, name } = await request.json();
-    const data = readWordsFile();
 
-    // Check if category already exists
-    if (data.categories.some((c: any) => c.id === id)) {
-      return NextResponse.json({ error: 'הקטגוריה כבר קיימת' }, { status: 400 });
+    const { error } = await supabase
+      .from('categories')
+      .insert({ id, name });
+
+    if (error) {
+      if (error.code === '23505') {
+        return NextResponse.json({ error: 'הקטגוריה כבר קיימת' }, { status: 400 });
+      }
+      throw error;
     }
 
-    data.categories.push({ id, name });
-    data.metadata.categories = data.categories.length;
-
-    writeWordsFile(data);
     return NextResponse.json({ success: true, category: { id, name } });
-  } catch {
+  } catch (error) {
+    console.error('Error adding category:', error);
     return NextResponse.json({ error: 'Failed to add category' }, { status: 500 });
   }
 }
@@ -66,30 +69,33 @@ export async function PUT(request: NextRequest) {
 
   try {
     const { originalId, newId, newName } = await request.json();
-    const data = readWordsFile();
 
-    const index = data.categories.findIndex((c: any) => c.id === originalId);
-    if (index === -1) {
-      return NextResponse.json({ error: 'הקטגוריה לא נמצאה' }, { status: 404 });
-    }
-
-    // Update category
-    data.categories[index] = { id: newId, name: newName };
-
-    // Update all words with this category
+    // If ID is changing, we need to update all words first
     if (originalId !== newId) {
-      ['easy', 'medium', 'hard'].forEach(difficulty => {
-        data.words[difficulty].forEach((word: any) => {
-          if (word.category === originalId) {
-            word.category = newId;
-          }
-        });
-      });
+      const { error: wordsError } = await supabase
+        .from('words')
+        .update({ category: newId })
+        .eq('category', originalId);
+
+      if (wordsError) throw wordsError;
+
+      // Delete old category and insert new one
+      await supabase.from('categories').delete().eq('id', originalId);
+      const { error } = await supabase.from('categories').insert({ id: newId, name: newName });
+      if (error) throw error;
+    } else {
+      // Just update the name
+      const { error } = await supabase
+        .from('categories')
+        .update({ name: newName })
+        .eq('id', originalId);
+
+      if (error) throw error;
     }
 
-    writeWordsFile(data);
     return NextResponse.json({ success: true, category: { id: newId, name: newName } });
-  } catch {
+  } catch (error) {
+    console.error('Error updating category:', error);
     return NextResponse.json({ error: 'Failed to update category' }, { status: 500 });
   }
 }
@@ -102,28 +108,30 @@ export async function DELETE(request: NextRequest) {
 
   try {
     const { id } = await request.json();
-    const data = readWordsFile();
 
     // Check if category has words
-    const hasWords = ['easy', 'medium', 'hard'].some(difficulty =>
-      data.words[difficulty].some((w: any) => w.category === id)
-    );
+    const { data: words, error: checkError } = await supabase
+      .from('words')
+      .select('id')
+      .eq('category', id)
+      .limit(1);
 
-    if (hasWords) {
+    if (checkError) throw checkError;
+
+    if (words && words.length > 0) {
       return NextResponse.json({ error: 'לא ניתן למחוק קטגוריה שיש בה מילים' }, { status: 400 });
     }
 
-    const index = data.categories.findIndex((c: any) => c.id === id);
-    if (index === -1) {
-      return NextResponse.json({ error: 'הקטגוריה לא נמצאה' }, { status: 404 });
-    }
+    const { error } = await supabase
+      .from('categories')
+      .delete()
+      .eq('id', id);
 
-    data.categories.splice(index, 1);
-    data.metadata.categories = data.categories.length;
+    if (error) throw error;
 
-    writeWordsFile(data);
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (error) {
+    console.error('Error deleting category:', error);
     return NextResponse.json({ error: 'Failed to delete category' }, { status: 500 });
   }
 }
