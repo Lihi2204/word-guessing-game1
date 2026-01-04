@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { supabase, getPlayerId } from '@/lib/supabase';
 import { checkAnswer, getDescriptionDifficulty, generateHints } from '@/lib/game-logic';
 import ShareButtons from '@/components/ShareButtons';
-import Timer from '@/components/Timer';
 import { Word, GameRoom } from '@/lib/types';
 import { getAllWordsForLookup } from '@/lib/game-logic';
 
@@ -37,7 +36,7 @@ export default function RoomPage() {
   const [isTyping, setIsTyping] = useState(false);
   const [otherTyping, setOtherTyping] = useState(false);
   const [countdown, setCountdown] = useState(3);
-  const [timerKey, setTimerKey] = useState(0);
+  const [serverTimeLeft, setServerTimeLeft] = useState(TIME_PER_WORD);
   const [wordAnswered, setWordAnswered] = useState(false);
   const [error, setError] = useState('');
   const [hintsUsed, setHintsUsed] = useState<string[]>([]);
@@ -49,6 +48,13 @@ export default function RoomPage() {
   // Refs for values needed in realtime callbacks
   const wordIndexRef = useRef(wordIndex);
   wordIndexRef.current = wordIndex;
+  const wordAnsweredRef = useRef(wordAnswered);
+  wordAnsweredRef.current = wordAnswered;
+
+  // Check if current player is the host
+  const isHost = room?.player1_id === playerId;
+  const isPlayer2 = room?.player2_id === playerId;
+  const isInRoom = isHost || isPlayer2;
 
   // Get player ID
   useEffect(() => {
@@ -122,7 +128,7 @@ export default function RoomPage() {
             setAttempts([]);
             setWordAnswered(false);
             setHintsUsed([]);
-            setTimerKey(prev => prev + 1);
+            setServerTimeLeft(TIME_PER_WORD);
           }
         }
       )
@@ -180,6 +186,29 @@ export default function RoomPage() {
     }
   };
 
+  // Handle time up or move to next word
+  const handleTimeUp = useCallback(async () => {
+    if (!isHost || wordAnsweredRef.current) return;
+
+    if (wordIndexRef.current >= TOTAL_WORDS - 1) {
+      await supabase
+        .from('game_rooms')
+        .update({
+          status: 'finished',
+          finished_at: new Date().toISOString(),
+        })
+        .eq('code', roomCode);
+    } else {
+      await supabase
+        .from('game_rooms')
+        .update({
+          current_word_index: wordIndexRef.current + 1,
+          word_started_at: new Date().toISOString(),
+        })
+        .eq('code', roomCode);
+    }
+  }, [isHost, roomCode]);
+
   // Countdown effect
   useEffect(() => {
     if (phase !== 'countdown') return;
@@ -199,10 +228,26 @@ export default function RoomPage() {
     return () => clearTimeout(timer);
   }, [phase, countdown, room]);
 
-  // Check if current player is the host
-  const isHost = room?.player1_id === playerId;
-  const isPlayer2 = room?.player2_id === playerId;
-  const isInRoom = isHost || isPlayer2;
+  // Synchronized timer based on server time
+  useEffect(() => {
+    if (!room?.word_started_at || phase !== 'playing' || wordAnswered) return;
+
+    const updateTimer = () => {
+      const startTime = new Date(room.word_started_at!).getTime();
+      const now = Date.now();
+      const elapsed = Math.floor((now - startTime) / 1000);
+      const remaining = Math.max(0, TIME_PER_WORD - elapsed);
+      setServerTimeLeft(remaining);
+
+      if (remaining <= 0) {
+        handleTimeUp();
+      }
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [room?.word_started_at, phase, wordAnswered, handleTimeUp]);
 
   // Start game (host only)
   const handleStartGame = async () => {
@@ -213,6 +258,8 @@ export default function RoomPage() {
       .update({
         status: 'playing',
         started_at: new Date().toISOString(),
+        word_started_at: new Date().toISOString(),
+        current_word_index: 0,
       })
       .eq('code', roomCode);
 
@@ -297,34 +344,13 @@ export default function RoomPage() {
           .from('game_rooms')
           .update({
             current_word_index: wordIndex + 1,
+            word_started_at: new Date().toISOString(),
           })
           .eq('code', roomCode);
       }
     }
 
     setUserInput('');
-  };
-
-  // Handle time up or move to next word
-  const handleTimeUp = async () => {
-    if (!isHost) return; // Only host advances the game
-
-    if (wordIndex >= TOTAL_WORDS - 1) {
-      await supabase
-        .from('game_rooms')
-        .update({
-          status: 'finished',
-          finished_at: new Date().toISOString(),
-        })
-        .eq('code', roomCode);
-    } else {
-      await supabase
-        .from('game_rooms')
-        .update({
-          current_word_index: wordIndex + 1,
-        })
-        .eq('code', roomCode);
-    }
   };
 
   // Handle hint usage
@@ -533,14 +559,25 @@ export default function RoomPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white p-4">
       <div className="max-w-lg mx-auto">
-        {/* Timer */}
+        {/* Timer - Synchronized */}
         <div className="mb-4">
-          <Timer
-            duration={TIME_PER_WORD}
-            onTimeUp={handleTimeUp}
-            isRunning={!wordAnswered}
-            resetKey={timerKey}
-          />
+          <div className="flex flex-col items-center gap-2">
+            <div className={`text-3xl font-bold ${
+              serverTimeLeft <= 5 ? 'text-red-500 animate-pulse' :
+              serverTimeLeft <= 10 ? 'text-orange-500' : 'text-blue-600'
+            }`}>
+              {String(Math.floor(serverTimeLeft / 60)).padStart(2, '0')}:
+              {String(serverTimeLeft % 60).padStart(2, '0')}
+            </div>
+            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className={`h-full transition-all duration-1000 ease-linear ${
+                  serverTimeLeft <= 5 ? 'bg-red-500' : serverTimeLeft <= 10 ? 'bg-orange-500' : 'bg-blue-500'
+                }`}
+                style={{ width: `${(serverTimeLeft / TIME_PER_WORD) * 100}%` }}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Scores */}

@@ -41,6 +41,7 @@ export interface GameRoom {
   created_at: string;
   started_at?: string;
   finished_at?: string;
+  word_started_at?: string;
 }
 
 export interface GameAttempt {
