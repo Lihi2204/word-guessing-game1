@@ -50,6 +50,8 @@ export default function RoomPage() {
   wordIndexRef.current = wordIndex;
   const wordAnsweredRef = useRef(wordAnswered);
   wordAnsweredRef.current = wordAnswered;
+  const phaseRef = useRef(phase);
+  phaseRef.current = phase;
 
   // Check if current player is the host
   const isHost = room?.player1_id === playerId;
@@ -116,7 +118,7 @@ export default function RoomPage() {
           const newRoom = payload.new as GameRoom;
           setRoom(newRoom);
 
-          if (newRoom.status === 'playing' && phase === 'waiting') {
+          if (newRoom.status === 'playing' && phaseRef.current === 'waiting') {
             setPhase('countdown');
           } else if (newRoom.status === 'finished') {
             setPhase('finished');
@@ -171,6 +173,43 @@ export default function RoomPage() {
       supabase.removeChannel(channel);
     };
   }, [roomCode, playerId]);
+
+  // Polling fallback for realtime updates (in case Supabase Realtime doesn't work)
+  useEffect(() => {
+    if (phase !== 'waiting' && phase !== 'playing') return;
+
+    const pollRoom = async () => {
+      const { data } = await supabase
+        .from('game_rooms')
+        .select('*')
+        .eq('code', roomCode)
+        .single();
+
+      if (data) {
+        setRoom(data);
+
+        // Handle status changes
+        if (data.status === 'playing' && phaseRef.current === 'waiting') {
+          setPhase('countdown');
+        } else if (data.status === 'finished') {
+          setPhase('finished');
+        }
+
+        // Handle word advancement
+        if (data.current_word_index !== wordIndexRef.current && data.status === 'playing' && phaseRef.current === 'playing') {
+          setWordIndex(data.current_word_index);
+          loadWord(data.words_order, data.current_word_index);
+          setAttempts([]);
+          setWordAnswered(false);
+          setHintsUsed([]);
+          setServerTimeLeft(TIME_PER_WORD);
+        }
+      }
+    };
+
+    const interval = setInterval(pollRoom, 2000);
+    return () => clearInterval(interval);
+  }, [roomCode, phase]);
 
   // Load word from words order
   const loadWord = (wordsOrder: string[], index: number) => {
