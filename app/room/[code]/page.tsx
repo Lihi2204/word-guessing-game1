@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase, getPlayerId } from '@/lib/supabase';
 import { checkAnswer, getDescriptionDifficulty, generateHints } from '@/lib/game-logic';
-import confetti from 'canvas-confetti';
 import ShareButtons from '@/components/ShareButtons';
 import { Word, GameRoom } from '@/lib/types';
 import { getAllWordsForLookup } from '@/lib/game-logic';
@@ -45,7 +44,7 @@ export default function RoomPage() {
   const [isNewGuest, setIsNewGuest] = useState(false);
   const [guestName, setGuestName] = useState('');
   const [isJoining, setIsJoining] = useState(false);
-  const [opponentCorrectPopup, setOpponentCorrectPopup] = useState<string | null>(null);
+  const [correctAnswerPopup, setCorrectAnswerPopup] = useState<string | null>(null);
 
   // Refs for values needed in realtime callbacks
   const wordIndexRef = useRef(wordIndex);
@@ -135,7 +134,7 @@ export default function RoomPage() {
             setWordAnswered(false);
             setHintsUsed([]);
             setServerTimeLeft(TIME_PER_WORD);
-            setOpponentCorrectPopup(null);
+            setCorrectAnswerPopup(null);
           }
         }
       )
@@ -163,18 +162,8 @@ export default function RoomPage() {
 
           if (attempt.is_correct) {
             setWordAnswered(true);
-            // Show popup if opponent answered correctly (not me)
-            if (attempt.player_id !== playerId) {
-              // Show popup with opponent's name
-              setOpponentCorrectPopup(playerName || 'היריב');
-            } else {
-              // I answered correctly - show confetti (in case realtime fires)
-              confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 }
-              });
-            }
+            // Show popup for both players with the name of who answered correctly
+            setCorrectAnswerPopup(playerName || 'שחקן');
           }
         }
       )
@@ -220,7 +209,7 @@ export default function RoomPage() {
           setWordAnswered(false);
           setHintsUsed([]);
           setServerTimeLeft(TIME_PER_WORD);
-          setOpponentCorrectPopup(null);
+          setCorrectAnswerPopup(null);
         }
       }
     };
@@ -380,15 +369,10 @@ export default function RoomPage() {
     if (isCorrect) {
       const scoreField = isHost ? 'player1_score' : 'player2_score';
       const newScore = ((isHost ? room?.player1_score : room?.player2_score) || 0) + 10;
+      const myName = isHost ? room?.player1_name : room?.player2_name;
 
       setWordAnswered(true);
-
-      // Show confetti for correct answer
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
-      });
+      setCorrectAnswerPopup(myName || 'שחקן');
 
       // Update score immediately
       await supabase
@@ -639,13 +623,12 @@ export default function RoomPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white p-4">
-      {/* Opponent Correct Answer Popup */}
-      {opponentCorrectPopup && (
+      {/* Correct Answer Popup - shown to both players */}
+      {correctAnswerPopup && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 shadow-2xl text-center animate-bounce">
-            <div className="text-5xl mb-4">🎯</div>
+          <div className="bg-white rounded-2xl p-8 shadow-2xl text-center">
             <div className="text-2xl font-bold text-green-600 mb-2">
-              {opponentCorrectPopup} ענה/תה נכון!
+              {correctAnswerPopup} ענה/תה נכון!
             </div>
             <div className="text-gray-500">ממשיכים לשאלה הבאה...</div>
           </div>
