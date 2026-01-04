@@ -628,7 +628,7 @@ export default function RoomPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-8 shadow-2xl text-center">
             <div className="text-2xl font-bold text-green-600 mb-2">
-              {correctAnswerPopup} ענה/תה נכון!
+              {correctAnswerPopup} - ניחוש נכון!
             </div>
             <div className="text-gray-500">ממשיכים לשאלה הבאה...</div>
           </div>
