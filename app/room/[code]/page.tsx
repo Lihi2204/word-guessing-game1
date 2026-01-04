@@ -5,11 +5,12 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase, getPlayerId } from '@/lib/supabase';
 import { checkAnswer, getDescriptionDifficulty, generateHints } from '@/lib/game-logic';
+import confetti from 'canvas-confetti';
 import ShareButtons from '@/components/ShareButtons';
 import { Word, GameRoom } from '@/lib/types';
 import { getAllWordsForLookup } from '@/lib/game-logic';
 
-const TOTAL_WORDS = 30;
+const TOTAL_WORDS = 20;
 const TIME_PER_WORD = 30;
 
 type GamePhase = 'loading' | 'waiting' | 'countdown' | 'playing' | 'finished';
@@ -44,6 +45,7 @@ export default function RoomPage() {
   const [isNewGuest, setIsNewGuest] = useState(false);
   const [guestName, setGuestName] = useState('');
   const [isJoining, setIsJoining] = useState(false);
+  const [opponentCorrectPopup, setOpponentCorrectPopup] = useState<string | null>(null);
 
   // Refs for values needed in realtime callbacks
   const wordIndexRef = useRef(wordIndex);
@@ -131,6 +133,7 @@ export default function RoomPage() {
             setWordAnswered(false);
             setHintsUsed([]);
             setServerTimeLeft(TIME_PER_WORD);
+            setOpponentCorrectPopup(null);
           }
         }
       )
@@ -157,7 +160,10 @@ export default function RoomPage() {
 
           if (attempt.is_correct) {
             setWordAnswered(true);
-            // The player who answered correctly already advanced the game in handleSubmit
+            // Show popup if opponent answered correctly (not me)
+            if (attempt.player_id !== playerId) {
+              setOpponentCorrectPopup(playerName || 'היריב');
+            }
           }
         }
       )
@@ -203,6 +209,7 @@ export default function RoomPage() {
           setWordAnswered(false);
           setHintsUsed([]);
           setServerTimeLeft(TIME_PER_WORD);
+          setOpponentCorrectPopup(null);
         }
       }
     };
@@ -365,26 +372,41 @@ export default function RoomPage() {
 
       setWordAnswered(true);
 
-      // Combine score update with advancement in single DB call
-      if (wordIndex >= TOTAL_WORDS - 1) {
-        await supabase
-          .from('game_rooms')
-          .update({
-            [scoreField]: newScore,
-            status: 'finished',
-            finished_at: new Date().toISOString(),
-          })
-          .eq('code', roomCode);
-      } else {
-        await supabase
-          .from('game_rooms')
-          .update({
-            [scoreField]: newScore,
-            current_word_index: wordIndex + 1,
-            word_started_at: new Date().toISOString(),
-          })
-          .eq('code', roomCode);
-      }
+      // Show confetti for correct answer
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      // Update score immediately
+      await supabase
+        .from('game_rooms')
+        .update({
+          [scoreField]: newScore,
+        })
+        .eq('code', roomCode);
+
+      // Wait 3 seconds then advance to next word
+      setTimeout(async () => {
+        if (wordIndex >= TOTAL_WORDS - 1) {
+          await supabase
+            .from('game_rooms')
+            .update({
+              status: 'finished',
+              finished_at: new Date().toISOString(),
+            })
+            .eq('code', roomCode);
+        } else {
+          await supabase
+            .from('game_rooms')
+            .update({
+              current_word_index: wordIndex + 1,
+              word_started_at: new Date().toISOString(),
+            })
+            .eq('code', roomCode);
+        }
+      }, 3000);
     }
 
     setUserInput('');
@@ -606,6 +628,19 @@ export default function RoomPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white p-4">
+      {/* Opponent Correct Answer Popup */}
+      {opponentCorrectPopup && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 shadow-2xl text-center animate-bounce">
+            <div className="text-5xl mb-4">🎯</div>
+            <div className="text-2xl font-bold text-green-600 mb-2">
+              {opponentCorrectPopup} ענה/תה נכון!
+            </div>
+            <div className="text-gray-500">ממשיכים לשאלה הבאה...</div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-lg mx-auto">
         {/* Timer - Synchronized */}
         <div className="mb-4">
