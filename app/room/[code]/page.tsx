@@ -361,19 +361,16 @@ export default function RoomPage() {
     // Update score if correct and auto-advance
     if (isCorrect) {
       const scoreField = isHost ? 'player1_score' : 'player2_score';
-      await supabase
-        .from('game_rooms')
-        .update({
-          [scoreField]: ((isHost ? room?.player1_score : room?.player2_score) || 0) + 10,
-        })
-        .eq('code', roomCode);
+      const newScore = ((isHost ? room?.player1_score : room?.player2_score) || 0) + 10;
 
       setWordAnswered(true);
-      // Advance to next word immediately (any player who answers correctly can advance)
+
+      // Combine score update with advancement in single DB call
       if (wordIndex >= TOTAL_WORDS - 1) {
         await supabase
           .from('game_rooms')
           .update({
+            [scoreField]: newScore,
             status: 'finished',
             finished_at: new Date().toISOString(),
           })
@@ -382,6 +379,7 @@ export default function RoomPage() {
         await supabase
           .from('game_rooms')
           .update({
+            [scoreField]: newScore,
             current_word_index: wordIndex + 1,
             word_started_at: new Date().toISOString(),
           })
