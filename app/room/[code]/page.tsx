@@ -42,6 +42,9 @@ export default function RoomPage() {
   const [error, setError] = useState('');
   const [hintsUsed, setHintsUsed] = useState<string[]>([]);
   const [availableHints, setAvailableHints] = useState<string[]>([]);
+  const [isNewGuest, setIsNewGuest] = useState(false);
+  const [guestName, setGuestName] = useState('');
+  const [isJoining, setIsJoining] = useState(false);
 
   // Refs for values needed in realtime callbacks
   const wordIndexRef = useRef(wordIndex);
@@ -69,6 +72,15 @@ export default function RoomPage() {
       }
 
       setRoom(data);
+
+      // Check if this is a new guest who needs to join
+      const currentPlayerId = getPlayerId();
+      const isCurrentHost = data.player1_id === currentPlayerId;
+      const isCurrentPlayer2 = data.player2_id === currentPlayerId;
+
+      if (!isCurrentHost && !isCurrentPlayer2 && data.status === 'waiting' && !data.player2_id) {
+        setIsNewGuest(true);
+      }
 
       if (data.status === 'waiting') {
         setPhase('waiting');
@@ -207,6 +219,31 @@ export default function RoomPage() {
     setPhase('countdown');
   };
 
+  // Join as guest
+  const handleJoinAsGuest = async () => {
+    if (!guestName.trim()) return;
+
+    setIsJoining(true);
+
+    const { error: updateError } = await supabase
+      .from('game_rooms')
+      .update({
+        player2_id: playerId,
+        player2_name: guestName.trim(),
+      })
+      .eq('code', roomCode);
+
+    if (updateError) {
+      setError('שגיאה בהצטרפות לחדר');
+      setIsJoining(false);
+      return;
+    }
+
+    localStorage.setItem('playerName', guestName.trim());
+    setIsNewGuest(false);
+    setIsJoining(false);
+  };
+
   // Submit guess
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -319,6 +356,35 @@ export default function RoomPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-xl text-gray-600">טוען...</div>
+      </div>
+    );
+  }
+
+  // New guest joining
+  if (isNewGuest) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
+          <h1 className="text-2xl font-bold text-center mb-2">הצטרף למשחק!</h1>
+          <p className="text-gray-600 text-center mb-6">{room?.player1_name} מזמין אותך לדו קרב</p>
+
+          <input
+            type="text"
+            value={guestName}
+            onChange={(e) => setGuestName(e.target.value)}
+            placeholder="הכנס את השם שלך..."
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none mb-4"
+            dir="rtl"
+          />
+
+          <button
+            onClick={handleJoinAsGuest}
+            disabled={isJoining || !guestName.trim()}
+            className="w-full bg-green-500 hover:bg-green-600 disabled:bg-green-300 text-white py-4 rounded-xl text-xl font-bold transition-colors"
+          >
+            {isJoining ? 'מצטרף...' : 'הצטרף למשחק'}
+          </button>
+        </div>
       </div>
     );
   }
