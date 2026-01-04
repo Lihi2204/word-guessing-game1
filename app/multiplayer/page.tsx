@@ -46,6 +46,8 @@ export default function MultiplayerPage() {
 
       // Save player name for future use
       localStorage.setItem('playerName', playerName.trim());
+      // Save pending room code for global notification
+      localStorage.setItem('pendingRoomCode', roomCode);
 
       router.push(`/room/${roomCode}`);
     } catch (err) {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import DuelNotification from "@/components/DuelNotification";
 
 export const metadata: Metadata = {
   title: "משחק ניחוש מילים",
@@ -15,6 +16,7 @@ export default function RootLayout({
     <html lang="he" dir="rtl">
       <body className="antialiased">
         {children}
+        <DuelNotification />
       </body>
     </html>
   );

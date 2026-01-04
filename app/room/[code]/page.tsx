@@ -493,7 +493,18 @@ export default function RoomPage() {
 
           {/* Share buttons (host only) */}
           {isHost && !room?.player2_id && (
-            <ShareButtons roomCode={roomCode} />
+            <>
+              <ShareButtons roomCode={roomCode} />
+              <Link
+                href="/play"
+                className="block w-full text-center bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-semibold transition-colors mt-4"
+              >
+                בינתיים, שחק משחק יחיד
+              </Link>
+              <p className="text-center text-sm text-gray-500 mt-2">
+                כשמישהו יצטרף, תקבל התראה
+              </p>
+            </>
           )}
 
           {/* Start button (host only, when both players connected) */}
