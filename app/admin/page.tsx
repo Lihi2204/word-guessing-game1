@@ -237,16 +237,28 @@ export default function AdminPage() {
               <button
                 onClick={async () => {
                   if (!confirm('להעביר את כל המילים מה-JSON לדאטאבייס?')) return;
-                  const res = await fetch('/api/admin/migrate', {
-                    method: 'POST',
-                    headers: { 'x-admin-password': storedPassword },
-                  });
-                  const result = await res.json();
-                  if (result.success) {
-                    alert(`הועברו ${result.wordsInserted} מילים ו-${result.categoriesInserted} קטגוריות`);
-                    loadData(storedPassword);
-                  } else {
-                    alert('שגיאה: ' + (result.error || 'Unknown error'));
+                  try {
+                    const res = await fetch('/api/admin/migrate', {
+                      method: 'POST',
+                      headers: { 'x-admin-password': storedPassword },
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                      let message = `הועברו ${result.wordsInserted} מילים ו-${result.categoriesInserted} קטגוריות`;
+                      if (result.totalErrors > 0) {
+                        message += `\n(${result.totalErrors} שגיאות)`;
+                      }
+                      alert(message);
+                      loadData(storedPassword);
+                    } else {
+                      let errorMessage = result.error || 'Unknown error';
+                      if (result.details) {
+                        errorMessage += '\n\nפרטים:\n' + result.details.slice(0, 5).join('\n');
+                      }
+                      alert('שגיאה: ' + errorMessage);
+                    }
+                  } catch (err) {
+                    alert('שגיאת רשת: ' + (err instanceof Error ? err.message : 'Unknown error'));
                   }
                 }}
                 className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg"

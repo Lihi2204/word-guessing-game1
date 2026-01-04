@@ -22,7 +22,20 @@ export async function POST(request: NextRequest) {
     let wordsInserted = 0;
     const errors: string[] = [];
 
-    // Insert categories
+    // First check if tables exist by trying a simple select
+    const { error: tableCheckError } = await supabase
+      .from('categories')
+      .select('id')
+      .limit(1);
+
+    if (tableCheckError) {
+      return NextResponse.json({
+        error: `Database error: ${tableCheckError.message}. Make sure to run the SQL schema in Supabase first.`,
+        code: tableCheckError.code
+      }, { status: 500 });
+    }
+
+    // Insert categories first (words depend on them)
     for (const category of data.categories) {
       const { error } = await supabase
         .from('categories')
@@ -33,6 +46,15 @@ export async function POST(request: NextRequest) {
       } else {
         categoriesInserted++;
       }
+    }
+
+    // If no categories were inserted and there were errors, stop
+    if (categoriesInserted === 0 && errors.length > 0) {
+      return NextResponse.json({
+        success: false,
+        error: 'Failed to insert categories',
+        details: errors,
+      }, { status: 500 });
     }
 
     // Insert words
@@ -60,13 +82,15 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({
-      success: true,
+      success: wordsInserted > 0,
       categoriesInserted,
       wordsInserted,
-      errors: errors.length > 0 ? errors : undefined,
+      errors: errors.length > 0 ? errors.slice(0, 10) : undefined, // Limit errors shown
+      totalErrors: errors.length,
     });
   } catch (error) {
     console.error('Migration error:', error);
-    return NextResponse.json({ error: 'Migration failed' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: `Migration failed: ${errorMessage}` }, { status: 500 });
   }
 }
