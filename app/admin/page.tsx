@@ -230,43 +230,45 @@ export default function AdminPage() {
             <span>קטגוריות: {data?.metadata.categories}</span>
           </div>
 
-          {/* Migration button - show only if no data */}
-          {data?.metadata.totalWords === 0 && (
-            <div className="mt-4 p-4 bg-yellow-50 rounded-lg">
-              <p className="text-yellow-800 mb-2">לא נמצאו מילים בדאטאבייס. לחץ להעברת המילים מה-JSON:</p>
-              <button
-                onClick={async () => {
-                  if (!confirm('להעביר את כל המילים מה-JSON לדאטאבייס?')) return;
-                  try {
-                    const res = await fetch('/api/admin/migrate', {
-                      method: 'POST',
-                      headers: { 'x-admin-password': storedPassword },
-                    });
-                    const result = await res.json();
-                    if (result.success) {
-                      let message = `הועברו ${result.wordsInserted} מילים ו-${result.categoriesInserted} קטגוריות`;
-                      if (result.totalErrors > 0) {
-                        message += `\n(${result.totalErrors} שגיאות)`;
-                      }
-                      alert(message);
-                      loadData(storedPassword);
-                    } else {
-                      let errorMessage = result.error || 'Unknown error';
-                      if (result.details) {
-                        errorMessage += '\n\nפרטים:\n' + result.details.slice(0, 5).join('\n');
-                      }
-                      alert('שגיאה: ' + errorMessage);
+          {/* Migration button - always show */}
+          <div className="mt-4 p-4 bg-yellow-50 rounded-lg">
+            <p className="text-yellow-800 mb-2">
+              {data?.metadata.totalWords === 0
+                ? 'לא נמצאו מילים בדאטאבייס. לחץ להעברת המילים מה-JSON:'
+                : 'לחץ להעברה מחדש של כל המילים מה-JSON (ידרוס נתונים קיימים):'}
+            </p>
+            <button
+              onClick={async () => {
+                if (!confirm('להעביר את כל המילים מה-JSON לדאטאבייס?')) return;
+                try {
+                  const res = await fetch('/api/admin/migrate', {
+                    method: 'POST',
+                    headers: { 'x-admin-password': storedPassword },
+                  });
+                  const result = await res.json();
+                  if (result.success) {
+                    let message = `הועברו ${result.wordsInserted} מילים ו-${result.categoriesInserted} קטגוריות`;
+                    if (result.totalErrors > 0) {
+                      message += `\n(${result.totalErrors} שגיאות)`;
                     }
-                  } catch (err) {
-                    alert('שגיאת רשת: ' + (err instanceof Error ? err.message : 'Unknown error'));
+                    alert(message);
+                    loadData(storedPassword);
+                  } else {
+                    let errorMessage = result.error || 'Unknown error';
+                    if (result.details) {
+                      errorMessage += '\n\nפרטים:\n' + result.details.slice(0, 5).join('\n');
+                    }
+                    alert('שגיאה: ' + errorMessage);
                   }
-                }}
-                className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg"
-              >
-                העבר מילים לדאטאבייס
-              </button>
-            </div>
-          )}
+                } catch (err) {
+                  alert('שגיאת רשת: ' + (err instanceof Error ? err.message : 'Unknown error'));
+                }
+              }}
+              className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg"
+            >
+              העבר מילים לדאטאבייס
+            </button>
+          </div>
         </div>
 
         {/* Filters */}
