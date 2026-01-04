@@ -240,6 +240,18 @@ export default function RoomPage() {
     }
 
     localStorage.setItem('playerName', guestName.trim());
+
+    // Fetch updated room data to see ourselves as player2
+    const { data: updatedRoom } = await supabase
+      .from('game_rooms')
+      .select('*')
+      .eq('code', roomCode)
+      .single();
+
+    if (updatedRoom) {
+      setRoom(updatedRoom);
+    }
+
     setIsNewGuest(false);
     setIsJoining(false);
   };
