@@ -67,7 +67,7 @@ export default function Home() {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-blue-500">●</span>
-              <span>יש לכם 30 שניות לכל מילה</span>
+              <span>יש לכם 20 שניות לכל מילה</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-blue-500">●</span>
