@@ -364,7 +364,7 @@ export default function RoomPage() {
       await supabase
         .from('game_rooms')
         .update({
-          [scoreField]: (isHost ? room?.player1_score : room?.player2_score) || 0 + 10,
+          [scoreField]: ((isHost ? room?.player1_score : room?.player2_score) || 0) + 10,
         })
         .eq('code', roomCode);
 
