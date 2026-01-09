@@ -159,7 +159,7 @@ export default function GameBoard() {
   // Show loading if no words or still loading
   if (!currentWord || isLoadingWords) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background-primary)' }}>
+      <div className="min-h-screen flex items-center justify-center home-background">
         <div className="flex flex-col items-center gap-4">
           <svg className="animate-spin h-12 w-12" style={{ color: 'var(--text-secondary)' }} viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
@@ -172,7 +172,7 @@ export default function GameBoard() {
   }
 
   return (
-    <div className="min-h-screen p-4 animate-fadeIn" style={{ background: 'var(--background-primary)' }}>
+    <div className="min-h-screen p-4 animate-fadeIn home-background">
       <div className="max-w-lg mx-auto">
         {/* Back Button */}
         <Link

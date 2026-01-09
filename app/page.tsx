@@ -14,10 +14,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center p-4 animate-fadeIn"
-      style={{ background: 'var(--background-primary)' }}
-    >
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 animate-fadeIn home-background">
       <main className="max-w-md w-full text-center">
         {/* Logo/Title */}
         <div className="mb-16">
@@ -32,17 +29,15 @@ export default function Home() {
         {/* High Score */}
         {highScore !== null && (
           <div
-            className="mb-12 rounded-xl p-5 transition-smooth"
+            className="mb-12 rounded-xl p-5 transition-smooth glass-card"
             style={{
-              background: 'var(--background-card)',
-              border: '1px solid var(--border-light)',
-              boxShadow: 'var(--shadow-xs)'
+              boxShadow: 'var(--shadow-sm)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+              e.currentTarget.style.boxShadow = 'var(--shadow-md)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = 'var(--shadow-xs)';
+              e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
             }}
           >
             <p className="text-base" style={{ color: 'var(--text-secondary)' }}>
@@ -77,19 +72,17 @@ export default function Home() {
 
           <Link
             href="/multiplayer"
-            className="block w-full text-xl font-medium py-5 px-6 rounded-xl transition-smooth"
+            className="block w-full text-xl font-medium py-5 px-6 rounded-xl transition-smooth glass-card"
             style={{
-              background: 'var(--background-secondary)',
-              color: 'var(--text-primary)',
-              border: '1px solid var(--border-light)'
+              color: 'var(--text-primary)'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'translateY(2px)';
-              e.currentTarget.style.background = '#F3F4F6';
+              e.currentTarget.style.background = 'rgba(243, 244, 246, 0.95)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.background = 'var(--background-secondary)';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.95)';
             }}
           >
             דו קרב
@@ -98,17 +91,15 @@ export default function Home() {
 
         {/* Instructions - Minimalist Card */}
         <div
-          className="mt-16 rounded-xl p-8 text-right transition-smooth"
+          className="mt-16 rounded-xl p-8 text-right transition-smooth glass-card"
           style={{
-            background: 'var(--background-card)',
-            border: '1px solid var(--border-light)',
-            boxShadow: 'var(--shadow-xs)'
+            boxShadow: 'var(--shadow-sm)'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.boxShadow = 'var(--shadow-xs)';
+            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
           }}
         >
           <h2 className="text-lg font-medium mb-5" style={{ color: 'var(--text-primary)' }}>

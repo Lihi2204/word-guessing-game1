@@ -432,7 +432,7 @@ export default function RoomPage() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--background-primary)' }}>
+      <div className="min-h-screen flex items-center justify-center p-4 home-background">
         <div className="text-center">
           <div className="text-xl mb-4" style={{ color: 'var(--error)' }}>{error}</div>
           <Link href="/" className="transition-smooth" style={{ color: 'var(--brand-blue)' }}>
@@ -446,7 +446,7 @@ export default function RoomPage() {
   // Loading state
   if (phase === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background-primary)' }}>
+      <div className="min-h-screen flex items-center justify-center home-background">
         <div className="text-xl" style={{ color: 'var(--text-secondary)' }}>טוען...</div>
       </div>
     );
@@ -455,7 +455,7 @@ export default function RoomPage() {
   // New guest joining
   if (isNewGuest) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 animate-fadeIn" style={{ background: 'var(--background-primary)' }}>
+      <div className="min-h-screen flex items-center justify-center p-4 animate-fadeIn home-background">
         <div className="max-w-md w-full rounded-xl p-8" style={{ background: 'var(--background-card)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-sm)' }}>
           <h1 className="text-2xl font-semibold text-center mb-2" style={{ color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>הצטרף למשחק!</h1>
           <p className="text-center mb-6" style={{ color: 'var(--text-secondary)' }}>{room?.player1_name} מזמין אותך לדו קרב</p>
@@ -512,7 +512,7 @@ export default function RoomPage() {
   // Waiting for players
   if (phase === 'waiting') {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 animate-fadeIn" style={{ background: 'var(--background-primary)' }}>
+      <div className="min-h-screen flex items-center justify-center p-4 animate-fadeIn home-background">
         <div className="max-w-md w-full rounded-xl p-8" style={{ background: 'var(--background-card)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-sm)' }}>
           <h1 className="text-2xl font-semibold text-center mb-6" style={{ color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
             {isHost ? 'הזמן חבר/ה למשחק!' : `הצטרפת לחדר של ${room?.player1_name}!`}
@@ -594,7 +594,7 @@ export default function RoomPage() {
   // Countdown
   if (phase === 'countdown') {
     return (
-      <div className="fixed inset-0 flex items-center justify-center z-50" style={{ background: 'var(--background-primary)' }}>
+      <div className="fixed inset-0 flex items-center justify-center z-50 home-background">
         <div className="text-center">
           <h2 className="text-2xl mb-8 font-medium" style={{ color: 'var(--text-secondary)', letterSpacing: '-0.01em' }}>מתחילים!</h2>
           <div className="text-9xl font-semibold animate-countdownPulse" style={{ color: 'var(--text-primary)' }}>
@@ -617,7 +617,7 @@ export default function RoomPage() {
         : null;
 
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 animate-fadeIn" style={{ background: 'var(--background-primary)' }}>
+      <div className="min-h-screen flex items-center justify-center p-4 animate-fadeIn home-background">
         <div className="max-w-md w-full rounded-xl p-8 text-center" style={{ background: 'var(--background-card)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-sm)' }}>
           <div className="text-6xl mb-4">
             {winner ? '🏆' : '🤝'}
@@ -667,7 +667,7 @@ export default function RoomPage() {
   // Playing phase
   if (!currentWord) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background-primary)' }}>
+      <div className="min-h-screen flex items-center justify-center home-background">
         <div className="text-xl" style={{ color: 'var(--text-secondary)' }}>טוען מילה...</div>
       </div>
     );
@@ -677,7 +677,7 @@ export default function RoomPage() {
   const description = currentWord.descriptions[descriptionDifficulty];
 
   return (
-    <div className="min-h-screen p-4" style={{ background: 'var(--background-primary)' }}>
+    <div className="min-h-screen p-4 home-background">
       {/* Correct Answer Popup - shown to both players */}
       {correctAnswerPopup && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

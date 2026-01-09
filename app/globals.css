@@ -23,6 +23,10 @@
   --error: #EF4444;
   --warning: #F59E0B;
   --info: #3B82F6;
+
+  /* Background Image Settings */
+  --background-image-url: url('/backgrounds/home-bg.webp');
+  --background-overlay: rgba(255, 255, 255, 0.85);
 }
 
 @theme inline {
@@ -134,4 +138,65 @@ body {
 
 .transition-smooth-fast {
   transition: all 200ms ease;
+}
+
+/* ========================================
+   Background Image & Glassmorphism Effects
+   ======================================== */
+
+.home-background {
+  background-image: var(--background-image-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* אפקט פרלקסה עדין */
+  position: relative;
+}
+
+/* שכבת overlay לקריאות טקסט */
+.home-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--background-overlay);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* וידוא שהתוכן מעל ה-overlay */
+.home-background > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* אפקט זכוכית מטושטשת לכרטיסים */
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* תמיכה בספארי */
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* fallback לדפדפנים ישנים שלא תומכים ב-backdrop-filter */
+@supports not (backdrop-filter: blur(10px)) {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.98);
+  }
+}
+
+/* אופטימיזציה למובייל - ביטול fixed attachment */
+@media (max-width: 768px) {
+  .home-background {
+    background-attachment: scroll;
+  }
+}
+
+/* הפחתת תנועה למשתמשים שמבקשים זאת */
+@media (prefers-reduced-motion: reduce) {
+  .home-background {
+    background-attachment: scroll;
+  }
 }
