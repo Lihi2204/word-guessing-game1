@@ -1,5 +1,4 @@
 import { Word } from './types';
-import wordsData from '@/data/words.json';
 
 interface WordsDataStructure {
   metadata: {
@@ -15,7 +14,42 @@ interface WordsDataStructure {
   };
 }
 
-const typedWordsData = wordsData as WordsDataStructure;
+// Cache for words data
+let cachedWordsData: WordsDataStructure | null = null;
+let cacheTimestamp: number = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Fetch words from API
+async function fetchWordsData(): Promise<WordsDataStructure> {
+  // Return cached data if still valid
+  const now = Date.now();
+  if (cachedWordsData && (now - cacheTimestamp) < CACHE_DURATION) {
+    return cachedWordsData;
+  }
+
+  try {
+    const response = await fetch('/api/words', {
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch words: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    cachedWordsData = data;
+    cacheTimestamp = now;
+    return data;
+  } catch (error) {
+    console.error('Error fetching words:', error);
+    // Fallback to empty data structure if fetch fails
+    return {
+      metadata: { totalWords: 0, categories: 0, difficultiesPerWord: 3 },
+      categories: [],
+      words: { easy: [], medium: [], hard: [] },
+    };
+  }
+}
 
 export function normalizeHebrew(text: string): string {
   return text
@@ -76,33 +110,34 @@ export function checkAnswer(userAnswer: string, correctWord: string, synonyms: s
   return false;
 }
 
-export function getAllWordsForLookup(): Word[] {
+export async function getAllWordsForLookup(): Promise<Word[]> {
   return getAllWords();
 }
 
-function getAllWords(): Word[] {
+async function getAllWords(): Promise<Word[]> {
+  const wordsData = await fetchWordsData();
   const allWords: Word[] = [];
 
   // Add easy words
-  typedWordsData.words.easy.forEach((w) => {
+  wordsData.words.easy.forEach((w) => {
     allWords.push({ ...w, difficulty: 'easy' });
   });
 
   // Add medium words
-  typedWordsData.words.medium.forEach((w) => {
+  wordsData.words.medium.forEach((w) => {
     allWords.push({ ...w, difficulty: 'medium' });
   });
 
   // Add hard words
-  typedWordsData.words.hard.forEach((w) => {
+  wordsData.words.hard.forEach((w) => {
     allWords.push({ ...w, difficulty: 'hard' });
   });
 
   return allWords;
 }
 
-export function selectWordsForGame(totalWords: number = 30): Word[] {
-  const allWords = getAllWords();
+export async function selectWordsForGame(totalWords: number = 30): Promise<Word[]> {
+  const allWords = await getAllWords();
   const selectedWords: Word[] = [];
   const usedWords = new Set<string>();
 
@@ -158,8 +193,9 @@ export function getDescriptionDifficulty(wordIndex: number): 'easy' | 'medium' |
   return 'hard';
 }
 
-export function getCategoryName(categoryId: string): string {
-  const category = typedWordsData.categories.find(c => c.id === categoryId);
+export async function getCategoryName(categoryId: string): Promise<string> {
+  const wordsData = await fetchWordsData();
+  const category = wordsData.categories.find(c => c.id === categoryId);
   return category?.name || categoryId;
 }
 

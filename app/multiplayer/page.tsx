@@ -27,7 +27,7 @@ export default function MultiplayerPage() {
     try {
       const playerId = getPlayerId();
       const roomCode = generateRoomCode();
-      const words = selectWordsForGame(30);
+      const words = await selectWordsForGame(30);
       const wordsOrder = words.map(w => w.word);
 
       const { data, error: dbError } = await supabase

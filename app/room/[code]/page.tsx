@@ -219,11 +219,11 @@ export default function RoomPage() {
   }, [roomCode, phase]);
 
   // Load word from words order
-  const loadWord = (wordsOrder: string[], index: number) => {
+  const loadWord = async (wordsOrder: string[], index: number) => {
     if (!wordsOrder || index >= wordsOrder.length) return;
 
     const wordName = wordsOrder[index];
-    const allWords = getAllWordsForLookup();
+    const allWords = await getAllWordsForLookup();
     const word = allWords.find(w => w.word === wordName);
     if (word) {
       setCurrentWord(word);
