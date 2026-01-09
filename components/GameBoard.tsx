@@ -204,7 +204,7 @@ export default function GameBoard() {
         {/* Hints Section */}
         {revealedHints.length > 0 && (
           <div
-            className="mb-4 rounded-2xl p-5 transition-smooth"
+            className="mb-4 rounded-xl p-5 transition-smooth"
             style={{
               background: '#FFF9E6',
               border: '1px solid #FFE5A3'
@@ -225,19 +225,19 @@ export default function GameBoard() {
         {/* Feedback */}
         {feedback.type && (
           <div
-            className="mb-4 p-5 rounded-2xl text-center font-medium transition-smooth animate-fadeIn"
+            className="mb-4 p-5 rounded-xl text-center font-medium transition-smooth animate-fadeIn"
             style={{
               background: feedback.type === 'correct'
                 ? 'var(--success)'
                 : feedback.type === 'wrong'
                 ? 'var(--error)'
                 : 'var(--background-secondary)',
-              color: feedback.type === 'skip' ? 'var(--text-primary)' : '#2D2D2D',
+              color: feedback.type === 'skip' ? 'var(--text-primary)' : '#FFFFFF',
               border: `1px solid ${
                 feedback.type === 'correct'
-                  ? '#8CD4B2'
+                  ? '#059669'
                   : feedback.type === 'wrong'
-                  ? '#FF9FA5'
+                  ? '#DC2626'
                   : 'var(--border-light)'
               }`
             }}
@@ -270,8 +270,8 @@ export default function GameBoard() {
                 autoFocus
                 dir="rtl"
                 onFocus={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--border-medium)';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,0,0,0.02)';
+                  e.currentTarget.style.borderColor = 'var(--brand-blue)';
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(77, 101, 255, 0.1)';
                 }}
                 onBlur={(e) => {
                   e.currentTarget.style.borderColor = 'var(--border-light)';
@@ -282,18 +282,18 @@ export default function GameBoard() {
                 type="submit"
                 className="px-6 py-3 rounded-xl font-medium transition-smooth"
                 style={{
-                  background: 'var(--background-card)',
-                  border: '2px solid var(--border-medium)',
-                  color: 'var(--text-primary)',
-                  boxShadow: 'var(--shadow-sm)'
+                  background: 'var(--brand-blue)',
+                  border: 'none',
+                  color: '#FFFFFF',
+                  boxShadow: '0 2px 4px rgba(77, 101, 255, 0.15)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                  e.currentTarget.style.transform = 'translateY(4px)';
+                  e.currentTarget.style.background = 'var(--brand-blue-hover)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                  e.currentTarget.style.background = 'var(--brand-blue)';
                 }}
               >
                 נחש
@@ -341,9 +341,11 @@ export default function GameBoard() {
                 color: 'var(--text-secondary)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'var(--accent-soft-gray)';
+                e.currentTarget.style.transform = 'translateY(2px)';
+                e.currentTarget.style.background = '#F3F4F6';
               }}
               onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
                 e.currentTarget.style.background = 'var(--background-secondary)';
               }}
             >

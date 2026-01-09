@@ -38,9 +38,9 @@ export default function Timer({ duration, onTimeUp, isRunning, resetKey }: Timer
   }, [isRunning, timeLeft, onTimeUp]);
 
   const getTimerColor = () => {
-    if (timeLeft <= 5) return { color: 'var(--error)', animate: true };
-    if (timeLeft <= 10) return { color: 'var(--warning)', animate: false };
-    return { color: 'var(--text-primary)', animate: false };
+    if (timeLeft <= 5) return { color: '#EF4444', animate: true };
+    if (timeLeft <= 10) return { color: '#F59E0B', animate: false };
+    return { color: '#1a1a1a', animate: false };
   };
 
   const formatTime = (seconds: number) => {
@@ -53,9 +53,9 @@ export default function Timer({ duration, onTimeUp, isRunning, resetKey }: Timer
   const timerStyle = getTimerColor();
 
   const getBarColor = () => {
-    if (timeLeft <= 5) return 'var(--error)';
-    if (timeLeft <= 10) return 'var(--warning)';
-    return 'var(--text-primary)';
+    if (timeLeft <= 5) return '#EF4444';
+    if (timeLeft <= 10) return '#F59E0B';
+    return '#4d65ff';
   };
 
   return (

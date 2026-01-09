@@ -147,9 +147,9 @@ export default function MultiplayerPage() {
           <div
             className="p-4 rounded-xl mb-4 text-center animate-fadeIn"
             style={{
-              background: 'var(--error)',
-              color: '#2D2D2D',
-              border: '1px solid #FF9FA5'
+              background: '#EF4444',
+              color: '#FFFFFF',
+              border: '1px solid #DC2626'
             }}
           >
             {error}
@@ -158,11 +158,11 @@ export default function MultiplayerPage() {
 
         {/* Player Name Input */}
         <div
-          className="rounded-2xl p-6 mb-6 transition-smooth"
+          className="rounded-xl p-6 mb-6 transition-smooth"
           style={{
             background: 'var(--background-card)',
             border: '1px solid var(--border-light)',
-            boxShadow: 'var(--shadow-sm)'
+            boxShadow: 'var(--shadow-xs)'
           }}
         >
           <label className="block font-medium mb-3" style={{ color: 'var(--text-primary)' }}>
@@ -181,8 +181,8 @@ export default function MultiplayerPage() {
             }}
             dir="rtl"
             onFocus={(e) => {
-              e.currentTarget.style.borderColor = 'var(--border-medium)';
-              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,0,0,0.02)';
+              e.currentTarget.style.borderColor = 'var(--brand-blue)';
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(77, 101, 255, 0.1)';
             }}
             onBlur={(e) => {
               e.currentTarget.style.borderColor = 'var(--border-light)';
@@ -193,11 +193,11 @@ export default function MultiplayerPage() {
 
         {/* Create Room Section */}
         <div
-          className="rounded-2xl p-6 mb-4 transition-smooth"
+          className="rounded-xl p-6 mb-4 transition-smooth"
           style={{
             background: 'var(--background-card)',
             border: '1px solid var(--border-light)',
-            boxShadow: 'var(--shadow-sm)'
+            boxShadow: 'var(--shadow-xs)'
           }}
         >
           <h2 className="text-lg font-medium mb-4" style={{ color: 'var(--text-primary)' }}>צור חדר חדש</h2>
@@ -206,10 +206,23 @@ export default function MultiplayerPage() {
             disabled={isCreating}
             className="w-full py-3 rounded-xl font-medium transition-smooth"
             style={{
-              background: isCreating ? 'var(--background-secondary)' : 'var(--success)',
-              border: `1px solid ${isCreating ? 'var(--border-light)' : '#8CD4B2'}`,
-              color: isCreating ? 'var(--text-muted)' : '#2D2D2D',
-              cursor: isCreating ? 'not-allowed' : 'pointer'
+              background: isCreating ? 'var(--background-secondary)' : 'var(--brand-blue)',
+              border: 'none',
+              color: isCreating ? 'var(--text-muted)' : '#FFFFFF',
+              cursor: isCreating ? 'not-allowed' : 'pointer',
+              boxShadow: isCreating ? 'none' : '0 2px 4px rgba(77, 101, 255, 0.15)'
+            }}
+            onMouseEnter={(e) => {
+              if (!isCreating) {
+                e.currentTarget.style.transform = 'translateY(4px)';
+                e.currentTarget.style.background = 'var(--brand-blue-hover)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isCreating) {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.background = 'var(--brand-blue)';
+              }
             }}
           >
             {isCreating ? 'יוצר חדר...' : 'צור חדר'}
@@ -225,11 +238,11 @@ export default function MultiplayerPage() {
 
         {/* Join Room Section */}
         <div
-          className="rounded-2xl p-6 transition-smooth"
+          className="rounded-xl p-6 transition-smooth"
           style={{
             background: 'var(--background-card)',
             border: '1px solid var(--border-light)',
-            boxShadow: 'var(--shadow-sm)'
+            boxShadow: 'var(--shadow-xs)'
           }}
         >
           <h2 className="text-lg font-medium mb-4" style={{ color: 'var(--text-primary)' }}>הצטרף לחדר קיים</h2>
@@ -248,8 +261,8 @@ export default function MultiplayerPage() {
               maxLength={5}
               dir="ltr"
               onFocus={(e) => {
-                e.currentTarget.style.borderColor = 'var(--border-medium)';
-                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,0,0,0.02)';
+                e.currentTarget.style.borderColor = 'var(--brand-blue)';
+                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(77, 101, 255, 0.1)';
               }}
               onBlur={(e) => {
                 e.currentTarget.style.borderColor = 'var(--border-light)';
@@ -261,22 +274,22 @@ export default function MultiplayerPage() {
               disabled={isJoining}
               className="w-full py-3 rounded-xl font-medium transition-smooth"
               style={{
-                background: isJoining ? 'var(--background-secondary)' : 'var(--background-card)',
-                border: isJoining ? '1px solid var(--border-light)' : '2px solid var(--border-medium)',
-                color: isJoining ? 'var(--text-muted)' : 'var(--text-primary)',
+                background: isJoining ? 'var(--background-secondary)' : 'var(--brand-blue)',
+                border: 'none',
+                color: isJoining ? 'var(--text-muted)' : '#FFFFFF',
                 cursor: isJoining ? 'not-allowed' : 'pointer',
-                boxShadow: isJoining ? 'none' : 'var(--shadow-sm)'
+                boxShadow: isJoining ? 'none' : '0 2px 4px rgba(77, 101, 255, 0.15)'
               }}
               onMouseEnter={(e) => {
                 if (!isJoining) {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                  e.currentTarget.style.transform = 'translateY(4px)';
+                  e.currentTarget.style.background = 'var(--brand-blue-hover)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isJoining) {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                  e.currentTarget.style.background = 'var(--brand-blue)';
                 }
               }}
             >

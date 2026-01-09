@@ -9,11 +9,11 @@ interface ScoreBoardProps {
 export default function ScoreBoard({ score, correctAnswers, hintsUsed }: ScoreBoardProps) {
   return (
     <div
-      className="flex justify-center gap-8 rounded-2xl p-5 transition-smooth"
+      className="flex justify-center gap-8 rounded-xl p-5 transition-smooth"
       style={{
         background: 'var(--background-card)',
         border: '1px solid var(--border-light)',
-        boxShadow: 'var(--shadow-sm)'
+        boxShadow: 'var(--shadow-xs)'
       }}
     >
       <div className="text-center">

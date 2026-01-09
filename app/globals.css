@@ -2,30 +2,27 @@
 @import "tailwindcss";
 
 :root {
-  /* Cloud Dancer Palette - Minimalist Colors */
-  --background-primary: #FAFAFA;
-  --background-secondary: #F5F5F5;
+  /* Vicarius Professional Palette - Tech Blue */
+  --brand-blue: #4d65ff;
+  --brand-blue-hover: #3d55ef;
+  --brand-blue-light: #6d7fff;
+
+  --background-primary: #FFFFFF;
+  --background-secondary: #F9FAFB;
   --background-card: #FFFFFF;
+  --background-dark: #1a1a1a;
 
-  --accent-soft-pink: #FFE5E5;
-  --accent-soft-gray: #E8E8E8;
-  --border-light: #F0F0F0;
-  --border-medium: #E8E8E8;
-  --border-focus: #D5D5D5;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4B5563;
+  --text-muted: #9CA3AF;
 
-  --text-primary: #2D2D2D;
-  --text-secondary: #6B6B6B;
-  --text-muted: #9E9E9E;
+  --border-light: #E5E7EB;
+  --border-medium: #D1D5DB;
 
-  --success: #A8E6CF;
-  --error: #FFB3BA;
-  --warning: #FFE5A3;
-  --info: #D5E8F7;
-
-  /* Gradients */
-  --gradient-hero: linear-gradient(135deg, #FAFAFA 0%, #FFE5E5 100%);
-  --gradient-card-hover: linear-gradient(145deg, #FFFFFF 0%, #F5F5F5 100%);
-  --gradient-button: linear-gradient(to bottom, #FFFFFF, #F8F8F8);
+  --success: #10B981;
+  --error: #EF4444;
+  --warning: #F59E0B;
+  --info: #3B82F6;
 }
 
 @theme inline {
@@ -44,21 +41,20 @@
   --color-border: var(--border-light);
   --color-border-medium: var(--border-medium);
 
-  --color-accent-pink: var(--accent-soft-pink);
-  --color-accent-gray: var(--accent-soft-gray);
+  --color-brand-blue: var(--brand-blue);
 
-  /* Shadows - Minimalist */
+  /* Shadows - Very Minimal (Vicarius Style) */
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.03);
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
-  --shadow-lg: 0 8px 16px rgba(0,0,0,0.08);
-  --shadow-focus: 0 0 0 3px rgba(0,0,0,0.02);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 16px rgba(0,0,0,0.12);
+  --shadow-focus: 0 0 0 3px rgba(77, 101, 255, 0.1);
 
-  /* Border Radius - Soft & Clean */
+  /* Border Radius - Vicarius Standard */
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  --radius-lg: 12px;
+  --radius-xl: 12px;
 }
 
 body {
@@ -82,7 +78,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent-soft-gray);
+  background: var(--border-medium);
   border-radius: 3px;
 }
 
@@ -106,22 +102,7 @@ body {
   }
 }
 
-/* Success Checkmark - Correct Answer */
-@keyframes checkmark {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* Countdown Pulse - 3...2...1 */
+/* Countdown Pulse - 3...2...1 (Keep - User loved it!) */
 @keyframes countdownPulse {
   0% {
     transform: scale(0.8);
@@ -137,34 +118,20 @@ body {
   }
 }
 
-/* Card Hover - Subtle Lift */
-@keyframes cardHover {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-2px);
-  }
-}
-
 /* Utility Animation Classes */
 .animate-fadeIn {
-  animation: fadeIn 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.animate-checkmark {
-  animation: checkmark 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: fadeIn 400ms ease-out;
 }
 
 .animate-countdownPulse {
   animation: countdownPulse 1s ease-out;
 }
 
-/* Transition Defaults */
+/* Transition Defaults - Vicarius Style (300ms) */
 .transition-smooth {
-  transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 300ms ease;
 }
 
-.transition-smooth-slow {
-  transition: all 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+.transition-smooth-fast {
+  transition: all 200ms ease;
 }

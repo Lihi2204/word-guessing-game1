@@ -43,11 +43,11 @@ export default function GameSummary({
       style={{ background: 'var(--background-primary)' }}
     >
       <div
-        className="max-w-md w-full rounded-2xl p-8 text-center transition-smooth"
+        className="max-w-md w-full rounded-xl p-8 text-center transition-smooth"
         style={{
           background: 'var(--background-card)',
           border: '1px solid var(--border-light)',
-          boxShadow: 'var(--shadow-lg)'
+          boxShadow: 'var(--shadow-sm)'
         }}
       >
         {/* Emoji */}
@@ -61,7 +61,7 @@ export default function GameSummary({
 
         {/* Stats */}
         <div
-          className="rounded-2xl p-6 mb-6"
+          className="rounded-xl p-6 mb-6"
           style={{
             background: 'var(--background-secondary)',
             border: '1px solid var(--border-light)'
@@ -102,7 +102,7 @@ export default function GameSummary({
             <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--border-light)' }}>
               <div
                 className="h-full transition-all duration-1000"
-                style={{ width: `${percentage}%`, background: 'var(--text-primary)' }}
+                style={{ width: `${percentage}%`, background: '#4d65ff' }}
               />
             </div>
           </div>
@@ -114,18 +114,18 @@ export default function GameSummary({
             onClick={onPlayAgain}
             className="w-full py-3 rounded-xl font-medium transition-smooth"
             style={{
-              background: 'var(--background-card)',
-              border: '2px solid var(--border-medium)',
-              color: 'var(--text-primary)',
-              boxShadow: 'var(--shadow-sm)'
+              background: 'var(--brand-blue)',
+              border: 'none',
+              color: '#FFFFFF',
+              boxShadow: '0 2px 4px rgba(77, 101, 255, 0.15)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+              e.currentTarget.style.transform = 'translateY(4px)';
+              e.currentTarget.style.background = 'var(--brand-blue-hover)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+              e.currentTarget.style.background = 'var(--brand-blue)';
             }}
           >
             שחק שוב
@@ -136,12 +136,14 @@ export default function GameSummary({
             style={{
               background: 'var(--background-secondary)',
               border: '1px solid var(--border-light)',
-              color: 'var(--text-secondary)'
+              color: 'var(--text-primary)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--accent-soft-gray)';
+              e.currentTarget.style.transform = 'translateY(2px)';
+              e.currentTarget.style.background = '#F3F4F6';
             }}
             onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
               e.currentTarget.style.background = 'var(--background-secondary)';
             }}
           >

@@ -22,11 +22,11 @@ export default function WordDisplay({ word, wordIndex, totalWords }: WordDisplay
 
       {/* Description */}
       <div
-        className="rounded-2xl p-8 transition-smooth"
+        className="rounded-xl p-8 transition-smooth"
         style={{
           background: 'var(--background-card)',
           border: '1px solid var(--border-light)',
-          boxShadow: 'var(--shadow-sm)'
+          boxShadow: 'var(--shadow-xs)'
         }}
       >
         <p className="text-xl leading-relaxed" style={{ color: 'var(--text-primary)' }}>
@@ -42,8 +42,8 @@ export default function WordDisplay({ word, wordIndex, totalWords }: WordDisplay
             className="w-2 h-2 rounded-full transition-smooth"
             style={{
               background: idx <= ['easy', 'medium', 'hard'].indexOf(descriptionDifficulty)
-                ? 'var(--text-primary)'
-                : 'var(--border-medium)'
+                ? '#4d65ff'
+                : '#D1D5DB'
             }}
           />
         ))}
