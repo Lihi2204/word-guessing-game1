@@ -38,45 +38,71 @@ export default function GameSummary({
   const message = getMessage();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+    <div
+      className="min-h-screen flex items-center justify-center p-4 animate-fadeIn"
+      style={{ background: 'var(--background-primary)' }}
+    >
+      <div
+        className="max-w-md w-full rounded-2xl p-8 text-center transition-smooth"
+        style={{
+          background: 'var(--background-card)',
+          border: '1px solid var(--border-light)',
+          boxShadow: 'var(--shadow-lg)'
+        }}
+      >
         {/* Emoji */}
         <div className="text-6xl mb-4">{message.emoji}</div>
 
         {/* Title */}
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">המשחק נגמר!</h1>
-        <p className="text-gray-600 mb-6">{message.text}</p>
+        <h1 className="text-2xl font-semibold mb-2" style={{ color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+          המשחק נגמר!
+        </h1>
+        <p className="mb-8" style={{ color: 'var(--text-secondary)' }}>{message.text}</p>
 
         {/* Stats */}
-        <div className="bg-gray-50 rounded-xl p-6 mb-6">
-          <div className="text-4xl font-bold text-blue-600 mb-2">{score}</div>
-          <div className="text-gray-500 mb-4">נקודות</div>
+        <div
+          className="rounded-2xl p-6 mb-6"
+          style={{
+            background: 'var(--background-secondary)',
+            border: '1px solid var(--border-light)'
+          }}
+        >
+          <div className="text-4xl font-semibold mb-2" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+            {score}
+          </div>
+          <div className="mb-5" style={{ color: 'var(--text-secondary)' }}>נקודות</div>
 
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className="text-2xl font-bold text-green-600">{correctAnswers}</div>
-              <div className="text-sm text-gray-500">נכונות</div>
+              <div className="text-2xl font-semibold" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                {correctAnswers}
+              </div>
+              <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>נכונות</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-red-500">{totalWords - correctAnswers}</div>
-              <div className="text-sm text-gray-500">שגויות</div>
+              <div className="text-2xl font-semibold" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                {totalWords - correctAnswers}
+              </div>
+              <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>שגויות</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-orange-500">{hintsUsed}</div>
-              <div className="text-sm text-gray-500">רמזים</div>
+              <div className="text-2xl font-semibold" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                {hintsUsed}
+              </div>
+              <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>רמזים</div>
             </div>
           </div>
 
           {/* Progress Bar */}
-          <div className="mt-4">
-            <div className="flex justify-between text-sm text-gray-500 mb-1">
+          <div className="mt-5">
+            <div className="flex justify-between text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
               <span>אחוז הצלחה</span>
               <span>{percentage}%</span>
             </div>
-            <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--border-light)' }}>
               <div
-                className="h-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-1000"
-                style={{ width: `${percentage}%` }}
+                className="h-full transition-all duration-1000"
+                style={{ width: `${percentage}%`, background: 'var(--text-primary)' }}
               />
             </div>
           </div>
@@ -86,13 +112,38 @@ export default function GameSummary({
         <div className="space-y-3">
           <button
             onClick={onPlayAgain}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-semibold transition-colors"
+            className="w-full py-3 rounded-xl font-medium transition-smooth"
+            style={{
+              background: 'var(--background-card)',
+              border: '2px solid var(--border-medium)',
+              color: 'var(--text-primary)',
+              boxShadow: 'var(--shadow-sm)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+            }}
           >
             שחק שוב
           </button>
           <Link
             href="/"
-            className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-semibold transition-colors"
+            className="block w-full py-3 rounded-xl font-medium transition-smooth"
+            style={{
+              background: 'var(--background-secondary)',
+              border: '1px solid var(--border-light)',
+              color: 'var(--text-secondary)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--accent-soft-gray)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'var(--background-secondary)';
+            }}
           >
             חזרה לדף הבית
           </Link>

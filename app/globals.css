@@ -1,46 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #1e293b;
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --success: #22c55e;
-  --error: #ef4444;
-  --warning: #f59e0b;
+  /* Cloud Dancer Palette - Minimalist Colors */
+  --background-primary: #FAFAFA;
+  --background-secondary: #F5F5F5;
+  --background-card: #FFFFFF;
+
+  --accent-soft-pink: #FFE5E5;
+  --accent-soft-gray: #E8E8E8;
+  --border-light: #F0F0F0;
+  --border-medium: #E8E8E8;
+  --border-focus: #D5D5D5;
+
+  --text-primary: #2D2D2D;
+  --text-secondary: #6B6B6B;
+  --text-muted: #9E9E9E;
+
+  --success: #A8E6CF;
+  --error: #FFB3BA;
+  --warning: #FFE5A3;
+  --info: #D5E8F7;
+
+  /* Gradients */
+  --gradient-hero: linear-gradient(135deg, #FAFAFA 0%, #FFE5E5 100%);
+  --gradient-card-hover: linear-gradient(145deg, #FFFFFF 0%, #F5F5F5 100%);
+  --gradient-button: linear-gradient(to bottom, #FFFFFF, #F8F8F8);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-hover: var(--primary-hover);
+  --color-background: var(--background-primary);
+  --color-foreground: var(--text-primary);
+  --color-card: var(--background-card);
+  --color-card-secondary: var(--background-secondary);
+
+  --color-primary: var(--text-primary);
+  --color-primary-hover: var(--text-secondary);
   --color-success: var(--success);
   --color-error: var(--error);
   --color-warning: var(--warning);
+  --color-info: var(--info);
+
+  --color-border: var(--border-light);
+  --color-border-medium: var(--border-medium);
+
+  --color-accent-pink: var(--accent-soft-pink);
+  --color-accent-gray: var(--accent-soft-gray);
+
+  /* Shadows - Minimalist */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.03);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 16px rgba(0,0,0,0.08);
+  --shadow-focus: 0 0 0 3px rgba(0,0,0,0.02);
+
+  /* Border Radius - Soft & Clean */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--background-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Minimalist */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--background-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: var(--accent-soft-gray);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--border-medium);
+}
+
+/* ========================================
+   Minimalist Animations - Micro-interactions
+   ======================================== */
+
+/* Fade In - Page Load */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Success Checkmark - Correct Answer */
+@keyframes checkmark {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Countdown Pulse - 3...2...1 */
+@keyframes countdownPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+/* Card Hover - Subtle Lift */
+@keyframes cardHover {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-2px);
+  }
+}
+
+/* Utility Animation Classes */
+.animate-fadeIn {
+  animation: fadeIn 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-checkmark {
+  animation: checkmark 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-countdownPulse {
+  animation: countdownPulse 1s ease-out;
+}
+
+/* Transition Defaults */
+.transition-smooth {
+  transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.transition-smooth-slow {
+  transition: all 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }

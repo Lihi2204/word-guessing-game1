@@ -8,20 +8,33 @@ interface ScoreBoardProps {
 
 export default function ScoreBoard({ score, correctAnswers, hintsUsed }: ScoreBoardProps) {
   return (
-    <div className="flex justify-center gap-6 bg-white rounded-xl p-4 shadow-sm">
+    <div
+      className="flex justify-center gap-8 rounded-2xl p-5 transition-smooth"
+      style={{
+        background: 'var(--background-card)',
+        border: '1px solid var(--border-light)',
+        boxShadow: 'var(--shadow-sm)'
+      }}
+    >
       <div className="text-center">
-        <div className="text-2xl font-bold text-blue-600">{score}</div>
-        <div className="text-sm text-gray-500">ניקוד</div>
+        <div className="text-2xl font-semibold" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+          {score}
+        </div>
+        <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>ניקוד</div>
       </div>
-      <div className="w-px bg-gray-200" />
+      <div className="w-px" style={{ background: 'var(--border-light)' }} />
       <div className="text-center">
-        <div className="text-2xl font-bold text-green-600">{correctAnswers}</div>
-        <div className="text-sm text-gray-500">נכונות</div>
+        <div className="text-2xl font-semibold" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+          {correctAnswers}
+        </div>
+        <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>נכונות</div>
       </div>
-      <div className="w-px bg-gray-200" />
+      <div className="w-px" style={{ background: 'var(--border-light)' }} />
       <div className="text-center">
-        <div className="text-2xl font-bold text-orange-500">{hintsUsed}</div>
-        <div className="text-sm text-gray-500">רמזים</div>
+        <div className="text-2xl font-semibold" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+          {hintsUsed}
+        </div>
+        <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>רמזים</div>
       </div>
     </div>
   );

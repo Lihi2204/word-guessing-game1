@@ -38,9 +38,9 @@ export default function Timer({ duration, onTimeUp, isRunning, resetKey }: Timer
   }, [isRunning, timeLeft, onTimeUp]);
 
   const getTimerColor = () => {
-    if (timeLeft <= 5) return 'text-red-500 animate-pulse';
-    if (timeLeft <= 10) return 'text-orange-500';
-    return 'text-blue-600';
+    if (timeLeft <= 5) return { color: 'var(--error)', animate: true };
+    if (timeLeft <= 10) return { color: 'var(--warning)', animate: false };
+    return { color: 'var(--text-primary)', animate: false };
   };
 
   const formatTime = (seconds: number) => {
@@ -50,18 +50,29 @@ export default function Timer({ duration, onTimeUp, isRunning, resetKey }: Timer
   };
 
   const percentage = (timeLeft / duration) * 100;
+  const timerStyle = getTimerColor();
+
+  const getBarColor = () => {
+    if (timeLeft <= 5) return 'var(--error)';
+    if (timeLeft <= 10) return 'var(--warning)';
+    return 'var(--text-primary)';
+  };
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className={`text-3xl font-bold ${getTimerColor()}`}>
+    <div className="flex flex-col items-center gap-3">
+      <div
+        className={`text-4xl font-semibold ${timerStyle.animate ? 'animate-pulse' : ''}`}
+        style={{ color: timerStyle.color, letterSpacing: '-0.02em' }}
+      >
         {formatTime(timeLeft)}
       </div>
-      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div
+        className="w-full h-1.5 rounded-full overflow-hidden"
+        style={{ background: 'var(--background-secondary)' }}
+      >
         <div
-          className={`h-full transition-all duration-1000 ease-linear ${
-            timeLeft <= 5 ? 'bg-red-500' : timeLeft <= 10 ? 'bg-orange-500' : 'bg-blue-500'
-          }`}
-          style={{ width: `${percentage}%` }}
+          className="h-full transition-all duration-1000 ease-linear"
+          style={{ width: `${percentage}%`, background: getBarColor() }}
         />
       </div>
     </div>

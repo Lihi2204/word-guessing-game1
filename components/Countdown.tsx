@@ -23,10 +23,21 @@ export default function Countdown({ onComplete }: CountdownProps) {
   }, [count, onComplete]);
 
   return (
-    <div className="fixed inset-0 bg-blue-600 flex items-center justify-center z-50">
-      <div className="text-center text-white">
-        <h2 className="text-2xl mb-8">מתחילים!</h2>
-        <div className="text-9xl font-bold animate-bounce">
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50"
+      style={{ background: 'var(--background-primary)' }}
+    >
+      <div className="text-center">
+        <h2
+          className="text-2xl mb-8 font-medium"
+          style={{ color: 'var(--text-secondary)', letterSpacing: '-0.01em' }}
+        >
+          מתחילים!
+        </h2>
+        <div
+          className="text-9xl font-semibold animate-countdownPulse"
+          style={{ color: 'var(--text-primary)' }}
+        >
           {count === 0 ? '!' : count}
         </div>
       </div>

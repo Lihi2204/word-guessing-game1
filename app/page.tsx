@@ -14,63 +14,106 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col items-center justify-center p-4">
+    <div
+      className="min-h-screen flex flex-col items-center justify-center p-4 animate-fadeIn"
+      style={{ background: 'var(--gradient-hero)' }}
+    >
       <main className="max-w-md w-full text-center">
         {/* Logo/Title */}
-        <div className="mb-8">
-          <h1 className="text-5xl font-bold text-blue-600 mb-2">
+        <div className="mb-16">
+          <h1 className="text-5xl font-semibold mb-3" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
             נחש מילה
           </h1>
-          <p className="text-gray-600 text-lg">
-            קראו את התיאור ונחשו את המילה!
+          <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+            קראו את התיאור ונחשו את המילה
           </p>
         </div>
 
-        {/* High Score */}
+        {/* High Score - Minimalist */}
         {highScore !== null && (
-          <div className="mb-8 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-            <p className="text-yellow-700">
+          <div
+            className="mb-12 rounded-2xl p-5 transition-smooth hover:shadow-md"
+            style={{
+              background: 'var(--background-card)',
+              border: '1px solid var(--border-light)'
+            }}
+          >
+            <p className="text-base" style={{ color: 'var(--text-secondary)' }}>
               <span className="text-2xl ml-2">🏆</span>
-              השיא שלך: <span className="font-bold text-xl">{highScore}</span> נקודות
+              השיא שלך: <span className="font-semibold text-2xl" style={{ color: 'var(--text-primary)' }}>{highScore}</span> נקודות
             </p>
           </div>
         )}
 
-        {/* Game Modes */}
-        <div className="space-y-4">
+        {/* Game Modes - Clean Buttons */}
+        <div className="space-y-3">
           <Link
             href="/play"
-            className="block w-full bg-blue-500 hover:bg-blue-600 text-white text-xl font-semibold py-4 px-6 rounded-xl transition-all transform hover:scale-105 shadow-lg"
+            className="block w-full text-xl font-medium py-5 px-6 rounded-2xl transition-smooth"
+            style={{
+              background: 'var(--background-card)',
+              color: 'var(--text-primary)',
+              border: '2px solid var(--border-medium)',
+              boxShadow: 'var(--shadow-sm)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+            }}
           >
             משחק יחיד
           </Link>
 
           <Link
             href="/multiplayer"
-            className="block w-full bg-green-500 hover:bg-green-600 text-white text-xl font-semibold py-4 px-6 rounded-xl transition-all transform hover:scale-105 shadow-lg"
+            className="block w-full text-xl font-medium py-5 px-6 rounded-2xl transition-smooth"
+            style={{
+              background: 'var(--background-secondary)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border-light)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--accent-soft-gray)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'var(--background-secondary)';
+            }}
           >
             דו קרב
           </Link>
         </div>
 
-        {/* Instructions */}
-        <div className="mt-10 bg-white rounded-xl p-6 shadow-md text-right">
-          <h2 className="text-lg font-semibold mb-3 text-gray-800">איך משחקים?</h2>
-          <ul className="space-y-2 text-gray-600">
-            <li className="flex items-start gap-2">
-              <span className="text-blue-500">●</span>
+        {/* Instructions - Minimalist Card */}
+        <div
+          className="mt-16 rounded-2xl p-8 text-right transition-smooth hover:shadow-md"
+          style={{
+            background: 'var(--background-card)',
+            border: '1px solid var(--border-light)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <h2 className="text-lg font-medium mb-5" style={{ color: 'var(--text-primary)' }}>
+            איך משחקים?
+          </h2>
+          <ul className="space-y-3" style={{ color: 'var(--text-secondary)' }}>
+            <li className="flex items-start gap-3">
+              <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--text-primary)' }}></span>
               <span>קראו את התיאור שמופיע על המסך</span>
             </li>
-            <li className="flex items-start gap-2">
-              <span className="text-blue-500">●</span>
+            <li className="flex items-start gap-3">
+              <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--text-primary)' }}></span>
               <span>נסו לנחש איזו מילה מתוארת</span>
             </li>
-            <li className="flex items-start gap-2">
-              <span className="text-blue-500">●</span>
+            <li className="flex items-start gap-3">
+              <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--text-primary)' }}></span>
               <span>יש לכם 20 שניות לכל מילה</span>
             </li>
-            <li className="flex items-start gap-2">
-              <span className="text-blue-500">●</span>
+            <li className="flex items-start gap-3">
+              <span className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: 'var(--text-primary)' }}></span>
               <span>אפשר להשתמש ברמזים אם נתקעתם</span>
             </li>
           </ul>

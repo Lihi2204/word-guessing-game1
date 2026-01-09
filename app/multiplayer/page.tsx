@@ -120,31 +120,52 @@ export default function MultiplayerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 animate-fadeIn" style={{ background: 'var(--background-primary)' }}>
       <div className="max-w-md w-full">
         {/* Back Button */}
         <Link
           href="/"
-          className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-6"
+          className="inline-flex items-center mb-6 transition-smooth"
+          style={{ color: 'var(--text-secondary)' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = 'var(--text-primary)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'var(--text-secondary)';
+          }}
         >
           <span className="ml-1">→</span>
           חזרה לדף הבית
         </Link>
 
-        <h1 className="text-3xl font-bold text-green-600 mb-8 text-center">
+        <h1 className="text-3xl font-semibold mb-8 text-center" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
           לשחק נגד חברים
         </h1>
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-100 text-red-700 p-3 rounded-xl mb-4 text-center">
+          <div
+            className="p-4 rounded-xl mb-4 text-center animate-fadeIn"
+            style={{
+              background: 'var(--error)',
+              color: '#2D2D2D',
+              border: '1px solid #FF9FA5'
+            }}
+          >
             {error}
           </div>
         )}
 
         {/* Player Name Input */}
-        <div className="bg-white rounded-xl p-6 shadow-md mb-6">
-          <label className="block text-gray-700 font-medium mb-2">
+        <div
+          className="rounded-2xl p-6 mb-6 transition-smooth"
+          style={{
+            background: 'var(--background-card)',
+            border: '1px solid var(--border-light)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <label className="block font-medium mb-3" style={{ color: 'var(--text-primary)' }}>
             השם שלך
           </label>
           <input
@@ -152,18 +173,44 @@ export default function MultiplayerPage() {
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
             placeholder="הכנס את השם שלך..."
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+            className="w-full px-4 py-3 rounded-xl focus:outline-none transition-smooth"
+            style={{
+              background: 'var(--background-secondary)',
+              border: '1px solid var(--border-light)',
+              color: 'var(--text-primary)'
+            }}
             dir="rtl"
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-medium)';
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,0,0,0.02)';
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-light)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
           />
         </div>
 
         {/* Create Room Section */}
-        <div className="bg-white rounded-xl p-6 shadow-md mb-4">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800">צור חדר חדש</h2>
+        <div
+          className="rounded-2xl p-6 mb-4 transition-smooth"
+          style={{
+            background: 'var(--background-card)',
+            border: '1px solid var(--border-light)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <h2 className="text-lg font-medium mb-4" style={{ color: 'var(--text-primary)' }}>צור חדר חדש</h2>
           <button
             onClick={handleCreateRoom}
             disabled={isCreating}
-            className="w-full bg-green-500 hover:bg-green-600 disabled:bg-green-300 text-white py-3 rounded-xl font-semibold transition-colors"
+            className="w-full py-3 rounded-xl font-medium transition-smooth"
+            style={{
+              background: isCreating ? 'var(--background-secondary)' : 'var(--success)',
+              border: `1px solid ${isCreating ? 'var(--border-light)' : '#8CD4B2'}`,
+              color: isCreating ? 'var(--text-muted)' : '#2D2D2D',
+              cursor: isCreating ? 'not-allowed' : 'pointer'
+            }}
           >
             {isCreating ? 'יוצר חדר...' : 'צור חדר'}
           </button>
@@ -171,28 +218,67 @@ export default function MultiplayerPage() {
 
         {/* Divider */}
         <div className="flex items-center gap-4 my-6">
-          <div className="flex-1 h-px bg-gray-300" />
-          <span className="text-gray-500">או</span>
-          <div className="flex-1 h-px bg-gray-300" />
+          <div className="flex-1 h-px" style={{ background: 'var(--border-medium)' }} />
+          <span style={{ color: 'var(--text-secondary)' }}>או</span>
+          <div className="flex-1 h-px" style={{ background: 'var(--border-medium)' }} />
         </div>
 
         {/* Join Room Section */}
-        <div className="bg-white rounded-xl p-6 shadow-md">
-          <h2 className="text-lg font-semibold mb-4 text-gray-800">הצטרף לחדר קיים</h2>
+        <div
+          className="rounded-2xl p-6 transition-smooth"
+          style={{
+            background: 'var(--background-card)',
+            border: '1px solid var(--border-light)',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <h2 className="text-lg font-medium mb-4" style={{ color: 'var(--text-primary)' }}>הצטרף לחדר קיים</h2>
           <form onSubmit={handleJoinRoom}>
             <input
               type="text"
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
               placeholder="הכנס קוד חדר..."
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none mb-3 text-center tracking-widest text-lg"
+              className="w-full px-4 py-3 rounded-xl focus:outline-none mb-3 text-center tracking-widest text-lg transition-smooth"
+              style={{
+                background: 'var(--background-secondary)',
+                border: '1px solid var(--border-light)',
+                color: 'var(--text-primary)'
+              }}
               maxLength={5}
               dir="ltr"
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border-medium)';
+                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,0,0,0.02)';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border-light)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
             />
             <button
               type="submit"
               disabled={isJoining}
-              className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white py-3 rounded-xl font-semibold transition-colors"
+              className="w-full py-3 rounded-xl font-medium transition-smooth"
+              style={{
+                background: isJoining ? 'var(--background-secondary)' : 'var(--background-card)',
+                border: isJoining ? '1px solid var(--border-light)' : '2px solid var(--border-medium)',
+                color: isJoining ? 'var(--text-muted)' : 'var(--text-primary)',
+                cursor: isJoining ? 'not-allowed' : 'pointer',
+                boxShadow: isJoining ? 'none' : 'var(--shadow-sm)'
+              }}
+              onMouseEnter={(e) => {
+                if (!isJoining) {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isJoining) {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                }
+              }}
             >
               {isJoining ? 'מצטרף...' : 'הצטרף לחדר'}
             </button>
