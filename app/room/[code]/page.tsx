@@ -432,10 +432,10 @@ export default function RoomPage() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--background-primary)' }}>
         <div className="text-center">
-          <div className="text-red-500 text-xl mb-4">{error}</div>
-          <Link href="/" className="text-blue-500 hover:underline">
+          <div className="text-xl mb-4" style={{ color: 'var(--error)' }}>{error}</div>
+          <Link href="/" className="transition-smooth" style={{ color: 'var(--brand-blue)' }}>
             חזרה לדף הבית
           </Link>
         </div>
@@ -446,8 +446,8 @@ export default function RoomPage() {
   // Loading state
   if (phase === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-gray-600">טוען...</div>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background-primary)' }}>
+        <div className="text-xl" style={{ color: 'var(--text-secondary)' }}>טוען...</div>
       </div>
     );
   }
@@ -455,24 +455,52 @@ export default function RoomPage() {
   // New guest joining
   if (isNewGuest) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
-          <h1 className="text-2xl font-bold text-center mb-2">הצטרף למשחק!</h1>
-          <p className="text-gray-600 text-center mb-6">{room?.player1_name} מזמין אותך לדו קרב</p>
+      <div className="min-h-screen flex items-center justify-center p-4 animate-fadeIn" style={{ background: 'var(--background-primary)' }}>
+        <div className="max-w-md w-full rounded-xl p-8" style={{ background: 'var(--background-card)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-sm)' }}>
+          <h1 className="text-2xl font-semibold text-center mb-2" style={{ color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>הצטרף למשחק!</h1>
+          <p className="text-center mb-6" style={{ color: 'var(--text-secondary)' }}>{room?.player1_name} מזמין אותך לדו קרב</p>
 
           <input
             type="text"
             value={guestName}
             onChange={(e) => setGuestName(e.target.value)}
             placeholder="הכנס את השם שלך..."
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none mb-4"
+            className="w-full px-4 py-3 rounded-xl focus:outline-none mb-4 transition-smooth"
+            style={{ background: 'var(--background-secondary)', border: '1px solid var(--border-light)', color: 'var(--text-primary)' }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = 'var(--brand-blue)';
+              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(77, 101, 255, 0.1)';
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-light)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
             dir="rtl"
           />
 
           <button
             onClick={handleJoinAsGuest}
             disabled={isJoining || !guestName.trim()}
-            className="w-full bg-green-500 hover:bg-green-600 disabled:bg-green-300 text-white py-4 rounded-xl text-xl font-bold transition-colors"
+            className="w-full py-4 rounded-xl text-xl font-medium transition-smooth"
+            style={{
+              background: (isJoining || !guestName.trim()) ? 'var(--background-secondary)' : 'var(--brand-blue)',
+              color: (isJoining || !guestName.trim()) ? 'var(--text-muted)' : '#FFFFFF',
+              border: 'none',
+              cursor: (isJoining || !guestName.trim()) ? 'not-allowed' : 'pointer',
+              boxShadow: (isJoining || !guestName.trim()) ? 'none' : '0 2px 4px rgba(77, 101, 255, 0.15)'
+            }}
+            onMouseEnter={(e) => {
+              if (!isJoining && guestName.trim()) {
+                e.currentTarget.style.transform = 'translateY(4px)';
+                e.currentTarget.style.background = 'var(--brand-blue-hover)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isJoining && guestName.trim()) {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.background = 'var(--brand-blue)';
+              }
+            }}
           >
             {isJoining ? 'מצטרף...' : 'הצטרף למשחק'}
           </button>
@@ -484,26 +512,26 @@ export default function RoomPage() {
   // Waiting for players
   if (phase === 'waiting') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
-          <h1 className="text-2xl font-bold text-center mb-6">
+      <div className="min-h-screen flex items-center justify-center p-4 animate-fadeIn" style={{ background: 'var(--background-primary)' }}>
+        <div className="max-w-md w-full rounded-xl p-8" style={{ background: 'var(--background-card)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-sm)' }}>
+          <h1 className="text-2xl font-semibold text-center mb-6" style={{ color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
             {isHost ? 'הזמן חבר/ה למשחק!' : `הצטרפת לחדר של ${room?.player1_name}!`}
           </h1>
 
           {/* Players Status */}
-          <div className="bg-gray-50 rounded-xl p-4 mb-6">
+          <div className="rounded-xl p-4 mb-6" style={{ background: 'var(--background-secondary)', border: '1px solid var(--border-light)' }}>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-700">{room?.player1_name}</span>
-              <span className="text-green-500">✓ מחובר</span>
+              <span style={{ color: 'var(--text-primary)' }}>{room?.player1_name}</span>
+              <span style={{ color: 'var(--success)' }}>✓ מחובר</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-700">
+              <span style={{ color: 'var(--text-primary)' }}>
                 {room?.player2_name || 'ממתין לשחקן נוסף...'}
               </span>
               {room?.player2_id ? (
-                <span className="text-green-500">✓ מחובר</span>
+                <span style={{ color: 'var(--success)' }}>✓ מחובר</span>
               ) : (
-                <span className="text-yellow-500 animate-pulse">⏳</span>
+                <span className="animate-pulse" style={{ color: 'var(--warning)' }}>⏳</span>
               )}
             </div>
           </div>
@@ -514,11 +542,20 @@ export default function RoomPage() {
               <ShareButtons roomCode={roomCode} />
               <Link
                 href="/play"
-                className="block w-full text-center bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-semibold transition-colors mt-4"
+                className="block w-full text-center py-3 rounded-xl font-medium transition-smooth mt-4"
+                style={{ background: 'var(--brand-blue)', color: '#FFFFFF', border: 'none', boxShadow: '0 2px 4px rgba(77, 101, 255, 0.15)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(4px)';
+                  e.currentTarget.style.background = 'var(--brand-blue-hover)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.background = 'var(--brand-blue)';
+                }}
               >
                 בינתיים, שחק משחק יחיד
               </Link>
-              <p className="text-center text-sm text-gray-500 mt-2">
+              <p className="text-center text-sm mt-2" style={{ color: 'var(--text-secondary)' }}>
                 כשמישהו יצטרף, תקבל התראה
               </p>
             </>
@@ -528,7 +565,16 @@ export default function RoomPage() {
           {isHost && room?.player2_id && (
             <button
               onClick={handleStartGame}
-              className="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl text-xl font-bold transition-colors mt-4"
+              className="w-full py-4 rounded-xl text-xl font-medium transition-smooth mt-4"
+              style={{ background: 'var(--brand-blue)', color: '#FFFFFF', border: 'none', boxShadow: '0 2px 4px rgba(77, 101, 255, 0.15)' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(4px)';
+                e.currentTarget.style.background = 'var(--brand-blue-hover)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.background = 'var(--brand-blue)';
+              }}
             >
               התחל משחק!
             </button>
@@ -536,7 +582,7 @@ export default function RoomPage() {
 
           {/* Waiting message for player 2 */}
           {isPlayer2 && (
-            <div className="text-center text-gray-600 mt-4">
+            <div className="text-center mt-4" style={{ color: 'var(--text-secondary)' }}>
               ממתין ליוצר החדר להתחיל את המשחק...
             </div>
           )}
@@ -548,10 +594,10 @@ export default function RoomPage() {
   // Countdown
   if (phase === 'countdown') {
     return (
-      <div className="fixed inset-0 bg-green-600 flex items-center justify-center z-50">
-        <div className="text-center text-white">
-          <h2 className="text-2xl mb-8">מתחילים!</h2>
-          <div className="text-9xl font-bold animate-bounce">
+      <div className="fixed inset-0 flex items-center justify-center z-50" style={{ background: 'var(--background-primary)' }}>
+        <div className="text-center">
+          <h2 className="text-2xl mb-8 font-medium" style={{ color: 'var(--text-secondary)', letterSpacing: '-0.01em' }}>מתחילים!</h2>
+          <div className="text-9xl font-semibold animate-countdownPulse" style={{ color: 'var(--text-primary)' }}>
             {countdown === 0 ? '!' : countdown}
           </div>
         </div>
@@ -571,36 +617,45 @@ export default function RoomPage() {
         : null;
 
     return (
-      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+      <div className="min-h-screen flex items-center justify-center p-4 animate-fadeIn" style={{ background: 'var(--background-primary)' }}>
+        <div className="max-w-md w-full rounded-xl p-8 text-center" style={{ background: 'var(--background-card)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-sm)' }}>
           <div className="text-6xl mb-4">
             {winner ? '🏆' : '🤝'}
           </div>
-          <h1 className="text-2xl font-bold mb-2">
+          <h1 className="text-2xl font-semibold mb-2" style={{ color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
             {winner ? `${winner} ניצח/ה!` : 'תיקו!'}
           </h1>
 
-          <div className="bg-gray-50 rounded-xl p-6 my-6">
+          <div className="rounded-xl p-6 my-6" style={{ background: 'var(--background-secondary)', border: '1px solid var(--border-light)' }}>
             <div className="flex justify-around">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">
+                <div className="text-2xl font-semibold" style={{ color: 'var(--brand-blue)', letterSpacing: '-0.02em' }}>
                   {room?.player1_score}
                 </div>
-                <div className="text-gray-600">{room?.player1_name}</div>
+                <div style={{ color: 'var(--text-secondary)' }}>{room?.player1_name}</div>
               </div>
-              <div className="text-3xl text-gray-300">vs</div>
+              <div className="text-3xl" style={{ color: 'var(--border-medium)' }}>vs</div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
+                <div className="text-2xl font-semibold" style={{ color: 'var(--brand-blue)', letterSpacing: '-0.02em' }}>
                   {room?.player2_score}
                 </div>
-                <div className="text-gray-600">{room?.player2_name}</div>
+                <div style={{ color: 'var(--text-secondary)' }}>{room?.player2_name}</div>
               </div>
             </div>
           </div>
 
           <Link
             href="/"
-            className="block w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-semibold transition-colors"
+            className="block w-full py-3 rounded-xl font-medium transition-smooth"
+            style={{ background: 'var(--brand-blue)', color: '#FFFFFF', border: 'none', boxShadow: '0 2px 4px rgba(77, 101, 255, 0.15)' }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(4px)';
+              e.currentTarget.style.background = 'var(--brand-blue-hover)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.background = 'var(--brand-blue)';
+            }}
           >
             חזרה לדף הבית
           </Link>
@@ -612,8 +667,8 @@ export default function RoomPage() {
   // Playing phase
   if (!currentWord) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-gray-600">טוען מילה...</div>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background-primary)' }}>
+        <div className="text-xl" style={{ color: 'var(--text-secondary)' }}>טוען מילה...</div>
       </div>
     );
   }
@@ -622,15 +677,15 @@ export default function RoomPage() {
   const description = currentWord.descriptions[descriptionDifficulty];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white p-4">
+    <div className="min-h-screen p-4" style={{ background: 'var(--background-primary)' }}>
       {/* Correct Answer Popup - shown to both players */}
       {correctAnswerPopup && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 shadow-2xl text-center">
-            <div className="text-2xl font-bold text-green-600 mb-2">
+          <div className="rounded-xl p-8 text-center" style={{ background: 'var(--background-card)', boxShadow: 'var(--shadow-lg)' }}>
+            <div className="text-2xl font-semibold mb-2" style={{ color: 'var(--success)', letterSpacing: '-0.01em' }}>
               {correctAnswerPopup} - ניחוש נכון!
             </div>
-            <div className="text-gray-500">ממשיכים לשאלה הבאה...</div>
+            <div style={{ color: 'var(--text-secondary)' }}>ממשיכים לשאלה הבאה...</div>
           </div>
         </div>
       )}
@@ -639,53 +694,62 @@ export default function RoomPage() {
         {/* Timer - Synchronized */}
         <div className="mb-4">
           <div className="flex flex-col items-center gap-2">
-            <div className={`text-3xl font-bold ${
-              serverTimeLeft <= 5 ? 'text-red-500 animate-pulse' :
-              serverTimeLeft <= 10 ? 'text-orange-500' : 'text-blue-600'
-            }`}>
+            <div className={`text-3xl font-semibold ${
+              serverTimeLeft <= 5 ? 'animate-pulse' : ''
+            }`} style={{
+              color: serverTimeLeft <= 5 ? '#EF4444' : serverTimeLeft <= 10 ? '#F59E0B' : '#4d65ff',
+              letterSpacing: '-0.02em'
+            }}>
               {String(Math.floor(serverTimeLeft / 60)).padStart(2, '0')}:
               {String(serverTimeLeft % 60).padStart(2, '0')}
             </div>
-            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--background-secondary)' }}>
               <div
-                className={`h-full transition-all duration-1000 ease-linear ${
-                  serverTimeLeft <= 5 ? 'bg-red-500' : serverTimeLeft <= 10 ? 'bg-orange-500' : 'bg-blue-500'
-                }`}
-                style={{ width: `${(serverTimeLeft / TIME_PER_WORD) * 100}%` }}
+                className="h-full transition-all duration-1000 ease-linear"
+                style={{
+                  width: `${(serverTimeLeft / TIME_PER_WORD) * 100}%`,
+                  background: serverTimeLeft <= 5 ? '#EF4444' : serverTimeLeft <= 10 ? '#F59E0B' : '#4d65ff'
+                }}
               />
             </div>
           </div>
         </div>
 
         {/* Scores */}
-        <div className="flex justify-between bg-white rounded-xl p-4 shadow-sm mb-4">
+        <div className="flex justify-between rounded-xl p-4 mb-4" style={{ background: 'var(--background-card)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-xs)' }}>
           <div className="text-center">
-            <div className={`text-xl font-bold ${isHost ? 'text-blue-600' : 'text-gray-600'}`}>
+            <div className="text-xl font-semibold" style={{
+              color: isHost ? 'var(--brand-blue)' : 'var(--text-secondary)',
+              letterSpacing: '-0.02em'
+            }}>
               {room?.player1_score}
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
               {room?.player1_name} {isHost && '(את)'}
             </div>
           </div>
-          <div className="text-gray-300 self-center">vs</div>
+          <div className="self-center" style={{ color: 'var(--border-medium)' }}>vs</div>
           <div className="text-center">
-            <div className={`text-xl font-bold ${isPlayer2 ? 'text-green-600' : 'text-gray-600'}`}>
+            <div className="text-xl font-semibold" style={{
+              color: isPlayer2 ? 'var(--brand-blue)' : 'var(--text-secondary)',
+              letterSpacing: '-0.02em'
+            }}>
               {room?.player2_score}
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
               {room?.player2_name} {isPlayer2 && '(את)'}
             </div>
           </div>
         </div>
 
         {/* Progress */}
-        <div className="text-center text-gray-500 mb-4">
+        <div className="text-center mb-4" style={{ color: 'var(--text-secondary)' }}>
           מילה {wordIndex + 1} מתוך {TOTAL_WORDS}
         </div>
 
         {/* Word Description */}
-        <div className="bg-white rounded-xl p-6 shadow-md mb-4">
-          <p className="text-xl leading-relaxed text-gray-800 text-center">
+        <div className="rounded-xl p-6 mb-4" style={{ background: 'var(--background-card)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-xs)' }}>
+          <p className="text-xl leading-relaxed text-center" style={{ color: 'var(--text-primary)' }}>
             "{description}"
           </p>
         </div>
@@ -693,9 +757,9 @@ export default function RoomPage() {
         {/* Hints Section */}
         <div className="mb-4">
           {hintsUsed.length > 0 && (
-            <div className="bg-yellow-50 rounded-xl p-4 mb-2">
+            <div className="rounded-xl p-4 mb-2" style={{ background: '#FFF9E6', border: '1px solid #FFE5A3' }}>
               {hintsUsed.map((hint, idx) => (
-                <div key={idx} className="text-yellow-800 text-sm">
+                <div key={idx} className="text-sm" style={{ color: '#92400E' }}>
                   רמז {idx + 1}: {hint}
                 </div>
               ))}
@@ -704,7 +768,14 @@ export default function RoomPage() {
           {!wordAnswered && hintsUsed.length < availableHints.length && (
             <button
               onClick={handleUseHint}
-              className="w-full bg-yellow-100 hover:bg-yellow-200 text-yellow-800 py-2 rounded-xl text-sm transition-colors"
+              className="w-full py-2 rounded-xl text-sm font-medium transition-smooth"
+              style={{ background: '#FFF9E6', border: '1px solid #FFE5A3', color: '#92400E' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#FFF5CC';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#FFF9E6';
+              }}
             >
               רמז ({hintsUsed.length + 1}/{availableHints.length})
             </button>
@@ -713,7 +784,7 @@ export default function RoomPage() {
 
         {/* Answer revealed */}
         {wordAnswered && (
-          <div className="bg-green-100 text-green-700 p-4 rounded-xl text-center font-semibold mb-4">
+          <div className="p-4 rounded-xl text-center font-medium mb-4" style={{ background: 'var(--success)', color: '#FFFFFF', border: '1px solid #059669' }}>
             התשובה: {currentWord.word}
           </div>
         )}
@@ -727,13 +798,31 @@ export default function RoomPage() {
                 value={userInput}
                 onChange={handleInputChange}
                 placeholder="הקלידו את התשובה..."
-                className="flex-1 px-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                className="flex-1 px-4 py-3 text-lg rounded-xl focus:outline-none transition-smooth"
+                style={{ background: 'var(--background-secondary)', border: '1px solid var(--border-light)', color: 'var(--text-primary)' }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--brand-blue)';
+                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(77, 101, 255, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border-light)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
                 autoFocus
                 dir="rtl"
               />
               <button
                 type="submit"
-                className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
+                className="px-6 py-3 rounded-xl font-medium transition-smooth"
+                style={{ background: 'var(--brand-blue)', color: '#FFFFFF', border: 'none', boxShadow: '0 2px 4px rgba(77, 101, 255, 0.15)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(4px)';
+                  e.currentTarget.style.background = 'var(--brand-blue-hover)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.background = 'var(--brand-blue)';
+                }}
               >
                 נחש
               </button>
@@ -742,34 +831,33 @@ export default function RoomPage() {
         )}
 
         {/* Attempts List */}
-        <div className="bg-white rounded-xl p-4 shadow-sm">
-          <h3 className="font-semibold mb-2 text-gray-700">ניסיונות:</h3>
+        <div className="rounded-xl p-4" style={{ background: 'var(--background-card)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-xs)' }}>
+          <h3 className="font-medium mb-2" style={{ color: 'var(--text-primary)' }}>ניסיונות:</h3>
           {otherTyping && (
-            <div className="text-gray-400 text-sm mb-2 animate-pulse">
+            <div className="text-sm mb-2 animate-pulse" style={{ color: 'var(--text-muted)' }}>
               השחקן השני מקליד...
             </div>
           )}
           <div className="space-y-2 max-h-40 overflow-y-auto">
             {attempts.length === 0 && !otherTyping && (
-              <div className="text-gray-400 text-sm">אין ניסיונות עדיין</div>
+              <div className="text-sm" style={{ color: 'var(--text-muted)' }}>אין ניסיונות עדיין</div>
             )}
             {attempts.map((attempt, idx) => (
               <div
                 key={idx}
-                className={`flex items-center justify-between p-2 rounded ${
-                  attempt.is_correct
-                    ? 'bg-green-50'
-                    : 'bg-gray-50'
-                }`}
+                className="flex items-center justify-between p-2 rounded"
+                style={{
+                  background: attempt.is_correct ? '#D1FAE5' : 'var(--background-secondary)'
+                }}
               >
-                <span className="text-gray-600">
+                <span style={{ color: 'var(--text-secondary)' }}>
                   {attempt.player_name}: "{attempt.attempt}"
                 </span>
                 <span>
                   {attempt.is_correct ? (
-                    <span className="text-green-500">✓ נכון!</span>
+                    <span style={{ color: 'var(--success)' }}>✓ נכון!</span>
                   ) : (
-                    <span className="text-red-500">✗</span>
+                    <span style={{ color: 'var(--error)' }}>✗</span>
                   )}
                 </span>
               </div>
