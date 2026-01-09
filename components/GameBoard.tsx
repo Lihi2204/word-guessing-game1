@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import Link from 'next/link';
 import Timer from './Timer';
 import WordDisplay from './WordDisplay';
 import ScoreBoard from './ScoreBoard';
@@ -173,6 +174,22 @@ export default function GameBoard() {
   return (
     <div className="min-h-screen p-4 animate-fadeIn" style={{ background: 'var(--background-primary)' }}>
       <div className="max-w-lg mx-auto">
+        {/* Back Button */}
+        <Link
+          href="/"
+          className="inline-flex items-center mb-6 transition-smooth"
+          style={{ color: 'var(--text-secondary)' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = 'var(--text-primary)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'var(--text-secondary)';
+          }}
+        >
+          <span className="ml-1">→</span>
+          חזרה לדף הבית
+        </Link>
+
         {/* Timer */}
         <div className="mb-6">
           <Timer

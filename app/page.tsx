@@ -22,7 +22,7 @@ export default function Home() {
         {/* Logo/Title */}
         <div className="mb-16">
           <h1 className="text-5xl font-semibold mb-3" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-            נחש מילה
+            נחשו את המילה
           </h1>
           <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
             קראו את התיאור ונחשו את המילה
