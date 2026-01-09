@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import DuelNotification from "@/components/DuelNotification";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "משחק ניחוש מילים",
@@ -17,6 +18,7 @@ export default function RootLayout({
       <body className="antialiased">
         {children}
         <DuelNotification />
+        <Analytics />
       </body>
     </html>
   );
